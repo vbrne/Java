@@ -13,7 +13,10 @@
  *  -- R_N := Resistor at Nth pin
  *
  ******************************************************************************/
- 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 class Pins {
   public static class Voltages {
     private int gate, drain, source;
