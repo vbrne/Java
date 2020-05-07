@@ -6,6 +6,7 @@
 *     https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/LinearRegression.java.html
 *                                                                               *
 ********************************************************************************/
+package Java;
 
 public class LinearFit {
   public final double intercept, slope;
@@ -35,5 +36,5 @@ public class LinearFit {
   public double intercept() { return intercept; }
   public double slope() { return slope; }
 
-  private void display() { /* to be written */ }
+  // private void display() { /* to be written */ }
 }

@@ -13,9 +13,10 @@
  *  -- R_N := Resistor at Nth pin
  *
  ******************************************************************************/
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+
+ /* CURRENTLY NOT IN DEVELOPEMENT */
+ 
+package Java;
 
 class Pins {
   public static class Voltages {
@@ -85,8 +86,7 @@ class Pins {
       return -1;
     }
 
-    private int getDrain(double[] one, double[] two, double[] tre){
-      boolean f = false;
+    private int getDrain(double[] one, double[] two, double[] tre) {
       int count = 0;
       for (int i = 0; i < one.length; i++)
         if (one[i] < 0)
