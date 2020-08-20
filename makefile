@@ -1,24 +1,29 @@
-CP=$(pwd)/lib
+cp=$(pwd)./lib
+dir=./sourceCode
 
-all: LinearFit Pins Threshold Lambda Display gui
+all: Display
 
-LinearFit: LinearFit.java
-	javac -d ./lib LinearFit.java
+LinearFit: $(dir)/LinearFit.java
+	javac -d $(cp) $(dir)/LinearFit.java
 
-Pins: Pins.java
-	javac -d ./lib Pins.java
+Pins: $(dir)/Pins.java
+	javac -d $(cp) $(dir)/Pins.java
 
-Threshold: Threshold.java
-	javac -d ./lib Threshold.java
+Threshold: $(dir)/Threshold.java
+	javac -d $(cp) $(dir)/Threshold.java
 
-Lambda: Lambda.java
-	javac -d ./lib Lambda.java
+Lambda: $(dir)/Lambda.java
+	javac -d $(cp) $(dir)/Lambda.java
 
-Display: Display.java
-	javac -d ./lib Display.java
+Display: $(dir)/Display.java
+	javac -d $(cp) $(dir)/Display.java
+	java -cp $(cp) Display									#Runs program; for DEVELOPEMENT
 
-gui: gui.java
-	javac -d ./lib gui.java
+gui: $(dir)/gui.java
+	javac -d $(cp) $(dir)/gui.java
+
+NMOS: $(dir)/NMOS.java
+	javac -d $(cp) $(dir)/NMOS.java
 
 ### ~NOTES~ ###
 # 20.8.20 Commented out "package Java" from each code because it was messing with the classpaths(?)
