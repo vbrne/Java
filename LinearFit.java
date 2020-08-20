@@ -6,7 +6,7 @@
 *     https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/LinearRegression.java.html
 *                                                                               *
 ********************************************************************************/
-package Java;
+//package lib;
 
 public class LinearFit {
   public final double intercept, slope;

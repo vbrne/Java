@@ -10,14 +10,14 @@
  * Lines 1-21 = V_G, Lines 22-42 = V_S, Lines 43-63 = sqrt(i);
  *
  ******************************************************************************/
-package Java;
+//package lib;
 
-class Threshold {
+public class Threshold {
   private double THRESHOLD;
   private double KN;
   private double[] VGS;
   private double[] IDS;
-  
+
   public Threshold(double[] vals) {
   // Formatting
     double[] V_G = new double[21], V_S = new double[21], I = new double[21];  // Divides values do each pin

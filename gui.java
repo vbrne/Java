@@ -1,4 +1,4 @@
-package Java;
+//package lib;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,7 +6,7 @@ import javax.swing.*;
 //guru99.com/java-swing-gui.html#1
 // I'm following this guide: javatpoint.com/java-swing
 
-class gui {
+public class gui {
   public static void main(String args[]) {
     int xWin = 900;
     int yWin = 290;
@@ -31,7 +31,7 @@ class gui {
     // Good enough
     // Box of Selections
     String devices[] = {"-", "DIODE", "NMOS", "PMOS", "BJT"};
-    JComboBox picker = new JComboBox(devices);
+    JComboBox<String> picker = new JComboBox<>(devices);
     picker.setBounds(xStart + 180, yStart, 140, 30);
 
     // Good enough
@@ -39,7 +39,7 @@ class gui {
     JLabel pickedd = new JLabel();
     pickedd.setBounds(xStart + 333, yStart + 30, 250, 30);
 
-    // Needs Work 
+    // Needs Work
     // Box to Analyze
     JButton picked = new JButton("Analyze!");
     picked.setBounds(xStart + 335, yStart, 140,30);

@@ -15,10 +15,10 @@
  ******************************************************************************/
 
  /* CURRENTLY NOT IN DEVELOPEMENT */
- 
-package Java;
 
-class Pins {
+//package lib;
+
+public class Pins {
   public static class Voltages {
     private int gate, drain, source;
     public Voltages(double[] ins) {

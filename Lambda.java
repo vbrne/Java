@@ -9,9 +9,9 @@
  *
  *
  ******************************************************************************/
-package Java;
+//package lib;
 
-class Lambda {
+public class Lambda {
 
   private double LAMBDA;
   private double RESIST;
