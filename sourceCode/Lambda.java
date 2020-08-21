@@ -15,6 +15,8 @@ public class Lambda {
 
   private double LAMBDA;
   private double RESIST;
+  private double INTERCEPT;
+  private double SLOPE;
   private double[] VDS;
   private double[] IDS;
 
@@ -44,6 +46,9 @@ public class Lambda {
     LinearFit Triode = new LinearFit(range(V_DS, tLow, tUp), range(I, tLow, tUp));
     LinearFit Saturation = new LinearFit(range(V_DS, sLow, sUp), range(I, sLow, sUp));
 
+    INTERCEPT = Saturation.intercept;
+    SLOPE = Saturation.slope;
+
   // Calculations
     LAMBDA = Saturation.slope / Saturation.intercept;
     RESIST = 1 / Triode.slope;  // This is optional but I'm still not sure about this one
@@ -54,6 +59,8 @@ public class Lambda {
 
   public double lambda() { return LAMBDA; }
   public double resistance() { return RESIST; }
+  public double intercept() { return INTERCEPT; }
+  public double slope() { return SLOPE; }
   public double[] VDS() { return VDS; }
   public double[] IDS() { return IDS; }
 

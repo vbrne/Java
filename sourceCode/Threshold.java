@@ -15,6 +15,8 @@
 public class Threshold {
   private double THRESHOLD;
   private double KN;
+  private double INTERCEPT;
+  private double SLOPE;
   private double[] VGS;
   private double[] IDS;
 
@@ -45,8 +47,10 @@ public class Threshold {
     LinearFit fit = new LinearFit(V_GS_eq, I_eq); // Applies LinearReagression to Plot values
 
   //Calculations
-    THRESHOLD = (fit.intercept * -1) / fit.slope; // Solves for Vth
-    KN = 2 * fit.slope * fit.slope;               // Solves for kn
+    INTERCEPT = fit.intercept;
+    SLOPE = fit.slope;
+    THRESHOLD = (INTERCEPT * -1) / SLOPE; // Solves for Vth
+    KN = 2 * SLOPE * SLOPE;               // Solves for kn
     VGS = V_GS;
     IDS = I;
   }
@@ -54,6 +58,8 @@ public class Threshold {
 
   public double threshold() { return THRESHOLD; }
   public double kn() { return KN; }
+  public double intercept() {return INTERCEPT; }
+  public double slope() { return SLOPE; }
   public double[] VGS() { return VGS; }
   public double[] IDS() { return IDS; }
 
