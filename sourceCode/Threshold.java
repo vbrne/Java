@@ -3,8 +3,8 @@
  * University of Texas Rio Grande Valley
  * Computer Engineering
  * Senior Design 1
- * Spring 2020
- * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ * Spring/Fall 2020
+ * Group 15: Bernie Villalon, Samuel Solis, Leo Marroquin
  *
  * We assume we pass a fixed number of readings in sweep1.txt file;
  * Lines 1-21 = V_G, Lines 22-42 = V_S, Lines 43-63 = sqrt(i);

@@ -2,6 +2,8 @@
 
 import java.awt.event.*;
 import javax.swing.*;
+import org.knowm.xchart.*;
+import java.util.*;
 
 //guru99.com/java-swing-gui.html#1
 // I'm following this guide: javatpoint.com/java-swing
@@ -52,7 +54,10 @@ public class gui {
         pickedd.setText(dev);
         if (sel == "-") { /* Do Nothing */ }
         if (sel == "DIODE") { /* Run DIODE tests */ }
-        if (sel == "NMOS") { /* Run NMOS tests */ }
+        if (sel == "NMOS") {
+          NMOS TestN = null;
+          TestN = new NMOS();
+        }
         if (sel == "PMOS") { /* Run PMOS tests */ }
         if (sel == "BJT") { /* Run BJT tests */ }
       }

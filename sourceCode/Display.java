@@ -9,6 +9,7 @@ public class Display {
   private int height = 500;
 
   public Display() {}
+//  public void close() { charts = new ArrayList<XYChart>; }
 
   private double[] xRange(double lBound, double uBound, int increments) { //To get x-series for Linear Fit
     double[] tmp = new double[increments];
@@ -36,7 +37,7 @@ public class Display {
 
     tmpch.addSeries("Current vs Voltage", x, y);      //Adds data values to said chart
 
-    double lBound = intercept * -1 / slope;                //Calculates Lower Bound for Linear Fit
+    double lBound = intercept * -1 / slope;           //Calculates Lower Bound for Linear Fit
     double uBound = x[x.length - 1];                  //Calculates Upper Bound for Linear Fit
     double[] xData = xRange(lBound, uBound, 20);      //Creates x-series
     double[] yData = yRange(xData, intercept, slope); //Creates y-series
@@ -62,9 +63,12 @@ public class Display {
     charts.add(tmpch);
   }
 
+  public List<XYChart> returnCharts() { return charts; }
+  public XYChart returnAt(int i) { return charts.get(i); }
+
   public void showAllCharts() {
-    new SwingWrapper<XYChart>(charts).displayChartMatrix(); //Displays all Charts next to one another
-  }
+    new SwingWrapper<XYChart>(charts).displayChartMatrix();
+  } //Displays all Charts next to one another
 
   public static void main(String args[]) {
     Display dis = new Display();
