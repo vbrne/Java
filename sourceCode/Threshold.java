@@ -2,46 +2,55 @@
  *
  * University of Texas Rio Grande Valley
  * Computer Engineering
- * Senior Design 1
+ * Senior Design
  * Spring/Fall 2020
  * Group 15: Bernie Villalon, Samuel Solis, Leo Marroquin
  *
- * We assume we pass a fixed number of readings in sweep1.txt file;
- * Lines 1-21 = V_G, Lines 22-42 = V_S, Lines 43-63 = sqrt(i);
+ * Description:
+ *   This class is responsible for deriving the Threshold Voltage labeled as
+ * 'THRESHOLD', the Transconductor Parameter labeled as 'KN', and also storing
+ * useful data used for said processes. This is accomplished through
+ * formatting the data and calculations.
+ * ~Formatting:
+ *   Currently there's no set way we've decided to format communications, but
+ * in general the end goal is to have one array for Voltages Tested (VGS) and
+ * the output Current (IDS). We then find the 'usable' data for calculations,
+ * being all indeces where the Current (IDS) is greater than 5mA, then we
+ * use the new arrays for the calculations.
+ * ~Calculations:
+ *   We use the formatted arrays and apply Linear Regression using the
+ * LinearFit Class to get a Linear Fit of the data. Afterwards, we use the
+ * derived Slope and Intercept to calculate 'THRESHOLD' and 'KN'.
  *
  ******************************************************************************/
+
 //package lib;
 
 public class Threshold {
-  private double THRESHOLD;
-  private double KN;
-  private double INTERCEPT;
-  private double SLOPE;
-  private double[] VGS;
-  private double[] IDS;
+  private double THRESHOLD, KN, INTERCEPT, SLOPE;
+  private double[] VGS, IDS, sqrtIDS;
 
   public Threshold(double[] vals) {
   // Formatting
     double[] V_G = new double[21], V_S = new double[21], I = new double[21];  // Divides values do each pin
     for (int i = 0; i < vals.length; i++) {
-      if (i < 21) {
-        V_G[i] = vals[i];                      // The first 21 values are the Voltages at the Gate pin
-      }
-      else if (i < 42) {
-        V_S[i-21] = vals[i];                  // The second 21 values are the Voltages at the Source pin
-      }
-      else {
-        I[i-42] = vals[i];                    // The final 21 values is the Current flowing through the load resistor
-      }
+      if (i < 21)
+        V_G[i] = vals[i];     // The first 21 values are the Voltages at the Gate pin
+      else if (i < 42)
+        V_S[i-21] = vals[i];  // The second 21 values are the Voltages at the Source pin
+      else
+        I[i-42] = vals[i];    // The final 21 values is the Current flowing through the load resistor
     }
+
+    sqrtIDS = sqrtArr(I);
 
     double[] V_GS = subtract(V_G, V_S);       // Makes difference in V_GS array
 
   // Find Saturation  Region
     int start = currStart(I);                 // Finds starting indices of the Saturation Region
 
-    double[] I_eq = newCurr(start, I);        // Current at the Saturation Region
-    double[] V_GS_eq = newVolt(start, V_GS);  // Gate voltages at the Saturation Region
+    double[] I_eq = newArr(start, sqrtIDS);  // Current at the Saturation Region
+    double[] V_GS_eq = newArr(start, V_GS);  // Gate voltages at the Saturation Region
 
   // Linear Regression
     LinearFit fit = new LinearFit(V_GS_eq, I_eq); // Applies LinearReagression to Plot values
@@ -54,15 +63,6 @@ public class Threshold {
     VGS = V_GS;
     IDS = I;
   }
-
-
-  public double threshold() { return THRESHOLD; }
-  public double kn() { return KN; }
-  public double intercept() {return INTERCEPT; }
-  public double slope() { return SLOPE; }
-  public double[] VGS() { return VGS; }
-  public double[] IDS() { return IDS; }
-
 
   // Simply prints array; used for testing purposes
   public static void printArr(double[] arr) {
@@ -96,20 +96,29 @@ public class Threshold {
   }
 
   // Returns new Current array consisting of only the Saturation Region values.
-  public static double[] newCurr(int start, double[] arr) {
-    double[] temp = new double[arr.length - start];
+  public static double[] sqrtArr(double[] arr) {
+    double[] temp = new double[arr.length];
     for (int i = 0; i < temp.length; i++)
-      temp[i] = Math.sqrt(arr[i + start]);  //Square Roots the values to match equation
+      temp[i] = Math.sqrt(arr[i]);  //Square Roots the values to match equation
     return temp;
   }
 
   // Returns new Voltage array consisting of only the Saturation Region values.
-  public static double[] newVolt(int start, double[] arr) {
+  public static double[] newArr(int start, double[] arr) {
     double[] temp = new double[arr.length - start];
     for (int i = 0; i < temp.length; i++)
       temp[i] = arr[i + start];
     return temp;
   }
+
+  // Accessors
+  public double threshold() { return THRESHOLD; }
+  public double kn() { return KN; }
+  public double intercept() {return INTERCEPT; }
+  public double slope() { return SLOPE; }
+  public double[] VGS() { return VGS; }
+  public double[] IDS() { return IDS; }
+  public double[] sqrtIDS() {return sqrtIDS; }
 
 //*** ~test~ Program *************************************************************
 

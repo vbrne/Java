@@ -10,6 +10,7 @@
 
 public class LinearFit {
   public final double intercept, slope;
+
   public LinearFit(double[] x, double[] y) {
     if (x.length != y.length)
       throw new IllegalArgumentException("Array lengths are not equal");
@@ -35,6 +36,4 @@ public class LinearFit {
 
   public double intercept() { return intercept; }
   public double slope() { return slope; }
-
-  // private void display() { /* to be written */ }
 }

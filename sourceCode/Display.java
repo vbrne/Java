@@ -1,5 +1,21 @@
+/*******************************************************************************
+ *
+ * University of Texas Rio Grande Valley
+ * Computer Engineering
+ * Senior Design
+ * Spring/Fall 2020
+ * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ *
+ * Description:
+ *   This class is responsible for creating graphs for displaying the data
+ * received from the tests. This is accomplished using an external Java
+ * Library called XChart, which could be found at:
+ *                                       https://knowm.org/open-source/xchart/
+ *
+ ******************************************************************************/
 
 //package lib;
+
 import org.knowm.xchart.*; //.jar file wasn't working or something, so extracted org folder and it worked
 import java.util.*;
 
@@ -22,7 +38,7 @@ public class Display {
   private double[] yRange(double[] x, double intercept, double slope) { //To get y-series for Linear Fit
     double[] tmp = new double[x.length];
     for (int i = 0; i < x.length; i++)    //Calculates y value for each x in array
-      tmp[i] = slope * x[i] + intercept;
+      tmp[i] = -1 * slope * x[i] + intercept;
     return tmp;
   }
 
@@ -63,8 +79,8 @@ public class Display {
     charts.add(tmpch);
   }
 
-  public List<XYChart> returnCharts() { return charts; }
-  public XYChart returnAt(int i) { return charts.get(i); }
+  public List<XYChart> returnCharts() { return charts; }    //I'm trying to embed charts in gui, so this
+  public XYChart returnAt(int i) { return charts.get(i); }  //  is supposed to help if possible
 
   public void showAllCharts() {
     new SwingWrapper<XYChart>(charts).displayChartMatrix();

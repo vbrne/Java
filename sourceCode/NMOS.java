@@ -1,3 +1,19 @@
+/*******************************************************************************
+ *
+ * University of Texas Rio Grande Valley
+ * Computer Engineering
+ * Senior Design
+ * Spring/Fall 2020
+ * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ *
+ * Description:
+ *   This Class is responsible for directing all the information being used,
+ * from communicating with the Hardware (has yet to be written) and
+ * giving the other Classes the information needed for their calculations.
+ *
+ ******************************************************************************/
+
+ //package lib;
 
 import org.knowm.xchart.*;  //Testing out things with the charts
 import java.util.*;         //Testing out things with the charts
@@ -25,13 +41,15 @@ public class NMOS {
 
 
     Display Charts = new Display();
-    Charts.addChart("Threshold", Thresh.VGS(), Thresh.IDS(), Thresh.intercept(), Thresh.slope());
-    Charts.addChart("Lambda", Lamb.VDS(), Lamb.IDS(), Lamb.intercept(), Lamb.slope());
-    charts = Charts.returnCharts();
+    Charts.addChart("Threshold Test", Thresh.VGS(), Thresh.IDS());
+    //Charts.addChart("Threshold2", Thresh.VGS(), Thresh.sqrtIDS(), Thresh.intercept(), Thresh.slope());
+    Charts.addChart("Lambda Test", Lamb.VDS(), Lamb.IDS());
+    //Charts.addChart("Lambda2", Lamb.VDS(), Lamb.IDS(), Lamb.intercept(), Lamb.slope());
+    //charts = Charts.returnCharts();
     Charts.showAllCharts();
   }
 
-  private double[] getThreshValues() {
+  private double[] getThreshValues() {  //Function to get variety of values for demonstration/testing purposes
     double[] v1 = {0.000,0.500,1.000,1.500,2.000,2.500,3.000,3.500,4.000,4.500,5.000,5.500,6.000,6.500,7.000,7.500,8.000,8.500,9.000,9.500,9.992,0.000,0.000,0.000,0.000,0.000,0.000,0.035,0.279,0.658,1.072,1.513,1.960,2.419,2.883,3.350,3.814,4.279,4.747,5.217,5.691,6.156, 0.000,0.000,0.000,0.000,0.000,0.000,0.353,2.813,6.634,10.809,15.255,19.762,24.390,29.068,33.777,38.455,43.144,47.862,52.601,57.381,62.069};
     double[] v2 = {0.000,0.500,1.000,1.500,2.000,2.500,3.000,3.500,4.000,4.500,5.000,5.500,6.000,6.500,7.000,7.500,8.000,8.500,9.000,9.500,9.987,0.030,0.000,0.000,0.000,0.008,0.213,0.600,1.030,1.479,1.937,2.399,2.871,3.342,3.811,4.280,4.748,5.215,5.686,6.153,6.620,7.153,0.302,0.000,0.000,0.000,0.081,2.148,6.050,10.385,14.912,19.530,24.188,28.947,33.696,38.425,43.154,47.873,52.581,57.330,62.039,66.747,55.848};
     double[] v3 = {0.0000,0.5000,1.0000,1.5000,2.0000,2.5020,3.0000,3.5000,4.0000,4.5000,5.0000,5.5000,6.0000,6.5000,7.0000,7.5000,8.0000,8.5000,9.0000,9.5000,10.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0003,0.0328,0.2755,0.6489,1.0648,1.5206,1.9683,2.4287,2.8887,3.3562,3.8261,4.3054,4.7690,5.2460,5.7210,6.2060,0,0,0,0,0,0.002556237,0.335685072,2.816871166,6.634969325,10.88752556,15.54805726,20.12576687,24.83333333,29.53680982,34.31697342,39.12167689,44.02249489,48.76278119,53.6400818,58.49693252,63.45603272};
@@ -44,8 +62,8 @@ public class NMOS {
     return v4;
   }
 
-  public  List<XYChart> returnCharts() { return charts; }
-  public XYChart returnAt(int i) { return charts.get(i); }
+  public  List<XYChart> returnCharts() { return charts; }   //I'm trying to embed charts in gui, so this
+  public XYChart returnAt(int i) { return charts.get(i); }  //  is supposed to help if possible
 
   public static void main(String args[]) {
     NMOS test = new NMOS();

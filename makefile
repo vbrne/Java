@@ -6,7 +6,7 @@
 cp=$(pwd)./lib
 dir=./sourceCode
 
-all: Display NMOS gui
+all: LinearFit Pins Threshold Lambda Display NMOS gui
 LinearFit: $(dir)/LinearFit.java
 	javac -d $(cp) $(dir)/LinearFit.java
 	#java -cp $(cp) LinearFit 							#Runs program; for DEVELOPEMENT
@@ -29,7 +29,7 @@ Display: $(dir)/Display.java
 
 gui: $(dir)/gui.java
 	javac -d $(cp) $(dir)/gui.java
-	java -cp $(cp) gui 										#Runs program; for DEVELOPEMENT
+	#java -cp $(cp) gui 										#Runs program; for DEVELOPEMENT
 
 NMOS: $(dir)/NMOS.java
 	javac -d $(cp) $(dir)/NMOS.java

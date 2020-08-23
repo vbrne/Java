@@ -2,15 +2,11 @@
  *
  * University of Texas Rio Grande Valley
  * Computer Engineering
- * Senior Design 1
- * Spring 2020
+ * Senior Design
+ * Spring/Fall 2020
  * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
  *
- * We assume we pass a fixed number of readings in sweep0.txt file;
- * First 8 are Voltages before R_1, Second 8 are Voltages after R_1;
- * Third 8 are Voltages before R_2, Fourth 8 are Voltages after R_2;
- * Fifth 8 are Voltages before R_3, Sixth 8 are Voltages after R_3;
- *  -- R_N := Resistor at Nth pin
+ * Currently not in development.
  *
  ******************************************************************************/
 

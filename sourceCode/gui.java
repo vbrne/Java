@@ -1,4 +1,23 @@
-//package lib;
+/*******************************************************************************
+ *
+ * University of Texas Rio Grande Valley
+ * Computer Engineering
+ * Senior Design
+ * Spring/Fall 2020
+ * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ *
+ * Description:
+ *   This is a Basic Graphic User Interface for the Semiconductor Parameter
+ * Analyzer. Has Titles, Labels, a Drop-Down Box, and some buttons.
+ *   When in use, the User is supposed do click on the drop-down menu next to
+ * the label 'Choose a device:', select between the listed devices, and then
+ * click the button labeled 'Analyze'. Afterwards, the respective class will
+ * be called and the relative data will be displayed in the form of graphs.
+ *   Currently, the NMOS devices are being prioratized during devlopement.
+ *
+ ******************************************************************************/
+
+ //package lib;
 
 import java.awt.event.*;
 import javax.swing.*;

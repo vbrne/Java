@@ -2,13 +2,27 @@
  *
  * University of Texas Rio Grande Valley
  * Computer Engineering
- * Senior Design 1
- * Spring 2020
+ * Senior Design
+ * Spring/Fall 2020
  * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
  *
- *
+ * Description:
+ *   This class is responsible for deriving the lambda constant, labeled as
+ * Lambda, and also store useful data used for said process. This is
+ * accomplished through formatting the data and calculations.
+ * ~Formatting:
+ *   Currently there's no set way we've decided to format communications, but
+ * in general the end goal is to have one array for Voltages Tested (VDS) and
+ * the output Current (IDS). We then find the 'usable' data for caluclations,
+ * being all indeces where the Current (IDS) begins to plateau and increase
+ * linearly, then we use the new arrays for the calculations.
+ * ~Calculations:
+ *   We use the formatted arrays and apply Linear Regression using the
+ * LinearFit Class to get a Linear Fit of the data. Afterwards, we use the
+ * derived Slope and Intercept to caluclate 'LAMBDA'.
  *
  ******************************************************************************/
+
 //package lib;
 
 public class Lambda {
