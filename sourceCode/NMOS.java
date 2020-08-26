@@ -41,10 +41,12 @@ public class NMOS {
 
 
     Display Charts = new Display();
-    Charts.addChart("Threshold Test", Thresh.VGS(), Thresh.IDS());
-    //Charts.addChart("Threshold2", Thresh.VGS(), Thresh.sqrtIDS(), Thresh.intercept(), Thresh.slope());
-    Charts.addChart("Lambda Test", Lamb.VDS(), Lamb.IDS());
-    //Charts.addChart("Lambda2", Lamb.VDS(), Lamb.IDS(), Lamb.intercept(), Lamb.slope());
+    //Charts.addChart("Threshold Test", Thresh.VGS, Thresh.IDS);
+    double lBound = Thresh.THRESHOLD; double uBound = Thresh.V_GS_eq[Thresh.V_GS_eq.length - 1];
+    Charts.addChart("Threshold2", Thresh.VGS, Thresh.sqrtIDS, Thresh.INTERCEPT, Thresh.SLOPE, lBound, uBound);
+    //Charts.addChart("Lambda Test", Lamb.VDS, Lamb.IDS);
+    lBound = Lamb.sat_V_DS[0]; uBound = Lamb.sat_V_DS[Lamb.sat_V_DS.length - 1];
+    Charts.addChart("Lambda2", Lamb.VDS, Lamb.IDS, Lamb.INTERCEPT, Lamb.SLOPE, lBound, uBound);
     //charts = Charts.returnCharts();
     Charts.showAllCharts();
   }

@@ -73,10 +73,7 @@ public class gui {
         pickedd.setText(dev);
         if (sel == "-") { /* Do Nothing */ }
         if (sel == "DIODE") { /* Run DIODE tests */ }
-        if (sel == "NMOS") {
-          NMOS TestN = null;
-          TestN = new NMOS();
-        }
+        if (sel == "NMOS") { new NMOS(); }
         if (sel == "PMOS") { /* Run PMOS tests */ }
         if (sel == "BJT") { /* Run BJT tests */ }
       }
