@@ -3,39 +3,45 @@
 # {scriptName}: {requirements}
 #	  {Terminal Command}
 
-cp=$(pwd)./lib
+cp=./lib
+cpp=./lib
 dir=./sourceCode
 
-all: LinearFit Pins Threshold Lambda Display NMOS gui
+all: CompileAll gui
+
+CompileAll:
+	javac -cp $(cp) -d $(cp) $(dir)/*
+
 LinearFit: $(dir)/LinearFit.java
 	javac -d $(cp) $(dir)/LinearFit.java
-	#java -cp $(cp) LinearFit 							#Runs program; for DEVELOPEMENT
+	java -cp $(cp) LinearFit
 
 Pins: $(dir)/Pins.java
 	javac -d $(cp) $(dir)/Pins.java
-	#java -cp $(cp) Pins 										#Runs program; for DEVELOPEMENT
+	java -cp $(cp) Pins
 
 Threshold: $(dir)/Threshold.java
-	javac -d $(cp) $(dir)/Threshold.java
-	#java -cp $(cp) Threshold								#Runs program; for DEVELOPEMENT
+	javac -cp $(cp) -d $(cp) $(dir)/Threshold.java
+	java -cp $(cp) Threshold
 
 Lambda: $(dir)/Lambda.java
-	javac -d $(cp) $(dir)/Lambda.java
-	#java -cp $(cp) Lambda 									#Runs program; for DEVELOPEMENT
+	javac -cp $(cp) -d $(cp) $(dir)/Lambda.java
+	java -cp $(cp) Lambda
 
 Display: $(dir)/Display.java
-	javac -d $(cp) $(dir)/Display.java
-	#java -cp $(cp) Display									#Runs program; for DEVELOPEMENT
+	javac -cp $(cp) -d $(cp) $(dir)/Display.java
+	java -cp $(cp) Display
 
 gui: $(dir)/gui.java
-	javac -d $(cp) $(dir)/gui.java
-	#java -cp $(cp) gui 										#Runs program; for DEVELOPEMENT
+	javac -cp $(cp) -d $(cp) $(dir)/gui.java
+	java -cp $(cp) gui
 
 NMOS: $(dir)/NMOS.java
-	javac -d $(cp) $(dir)/NMOS.java
-	#java -cp $(cp) NMOS 										#Runs program; for DEVELOPEMENT
+	javac -cp $(cp) -d $(cp) $(dir)/NMOS.java
+	java -cp $(cp) NMOS
 
 ### ~NOTES~ ###
 # 20.8.20 Commented out "package Java" from each code because it was messing with the classpaths(?)
 # 20.8.20 Been having to mess around with compiling and classpaths and stuff ;-;
 # 20.8.20 $(pwd) :: current directory
+# 20.8.27 I didn't know you can do '/*' to compile an entire folder o.O
