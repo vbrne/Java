@@ -4,13 +4,12 @@
 #	  {Terminal Command}
 
 cp=./lib
-cpp=./lib
 dir=./sourceCode
 
-all: CompileAll gui
+all: CompileAll
 
 CompileAll:
-	javac -cp $(cp) -d $(cp) $(dir)/*
+	javac -cp $(cp) -d $(cp) $(dir)/*.java
 
 LinearFit: $(dir)/LinearFit.java
 	javac -d $(cp) $(dir)/LinearFit.java
