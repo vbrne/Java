@@ -13,15 +13,19 @@
  *
  ******************************************************************************/
 
- //package lib;
-
 import org.knowm.xchart.*;  //Testing out things with the charts
 import java.util.*;         //Testing out things with the charts
+import java.io.*;
 
 import java.lang.Math;      //To get more variety during testing
 
 public class NMOS {
   private List<XYChart> charts = new ArrayList<XYChart>();
+  Threshold Thresh;
+  Lambda Lamb;
+
+  public NMOS(boolean fl) { Display tmp = new Display(); tmp.addF(); tmp.showAllCharts(); }
+
   public NMOS() {
    /****************************************************************************
     Communication with Device to get Data; returns "values" array, kinda like:
@@ -30,25 +34,30 @@ public class NMOS {
     double[] threshList = Coms.threshList();
     ****************************************************************************/
     double[] threshList = getThreshValues();
-    Threshold Thresh = new Threshold(threshList);
+    Thresh = new Threshold(threshList);
    /****************************************************************************
     Coms.returnThresh(Thresh.threshold());
 
     double[] lambList = Coms.lambdaList();
     ****************************************************************************/
-    double[] lambList = {0.000,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.000,1.100,1.200,1.300,1.400,1.500,1.600,1.700,1.800,1.900,2.000,2.100,2.200,2.300,2.400,2.500,3.000,3.500,4.000,4.500,5.000,5.500,6.000,6.500,7.000,7.500,8.000,8.500,9.000,9.500,10.000,10.500,11.000,11.500,12.000,0.000,0.096,0.195,0.293,0.389,0.492,0.590,0.688,0.779,0.877,0.974,1.071,1.165,1.261,1.356,1.449,1.539,1.627,1.710,1.783,1.840,1.878,1.898,1.908,1.913,1.917,1.926,1.933,1.936,1.939,1.943,1.949,1.953,1.957,1.960,1.965,1.970,1.973,1.978,1.983,1.990,2.000,2.003,2.007,2.010,0.000000000,0.000967937,0.001966122,0.002954225,0.003922162,0.004960678,0.005948780,0.006936882,0.007854406,0.008842509,0.009820528,0.010798548,0.011746320,0.012714257,0.013672111,0.014609800,0.015517241,0.016404517,0.017241379,0.017977415,0.018552127,0.018935269,0.019136923,0.019239766,0.019291188,0.019328494,0.019419238,0.019489816,0.019520065,0.019550313,0.019590643,0.019651139,0.019691470,0.019731801,0.019762049,0.019812462,0.019862876,0.019893124,0.019943537,0.019993950,0.020064529,0.020165356,0.020195604,0.020235935,0.020266183};
-    Lambda Lamb = new Lambda(lambList);
-
+    double[] lambList = getLambdaValues();
+    Lamb = new Lambda(lambList);
 
     Display Charts = new Display();
-    //Charts.addChart("Threshold Test", Thresh.VGS, Thresh.IDS);
-    double lBound = Thresh.THRESHOLD; double uBound = Thresh.V_GS_eq[Thresh.V_GS_eq.length - 1];
-    Charts.addChart("Threshold2", Thresh.VGS, Thresh.sqrtIDS, Thresh.INTERCEPT, Thresh.SLOPE, lBound, uBound);
-    //Charts.addChart("Lambda Test", Lamb.VDS, Lamb.IDS);
-    lBound = Lamb.sat_V_DS[0]; uBound = Lamb.sat_V_DS[Lamb.sat_V_DS.length - 1];
-    Charts.addChart("Lambda2", Lamb.VDS, Lamb.IDS, Lamb.INTERCEPT, Lamb.SLOPE, lBound, uBound);
-    //charts = Charts.returnCharts();
+    Charts.addThresholdChart(Thresh);
+    Charts.addLambdaChart(Lamb);
     Charts.showAllCharts();
+  }
+
+  public void export(int fl) throws IOException {
+    if (fl == 0)
+      new Export().exportThresh(Thresh);
+    if (fl == 1)
+      new Export().exportLamb(Lamb);
+    if (fl == 2) {
+      new Export().exportThresh(Thresh);
+      new Export().exportLamb(Lamb);
+    }
   }
 
   private double[] getThreshValues() {  //Function to get variety of values for demonstration/testing purposes
@@ -64,10 +73,14 @@ public class NMOS {
     return v4;
   }
 
-  public  List<XYChart> returnCharts() { return charts; }   //I'm trying to embed charts in gui, so this
-  public XYChart returnAt(int i) { return charts.get(i); }  //  is supposed to help if possible
+  private double[] getLambdaValues() {
+    return new double[] {0.000,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.000,1.100,1.200,1.300,1.400,1.500,1.600,1.700,1.800,1.900,2.000,2.100,2.200,2.300,2.400,2.500,3.000,3.500,4.000,4.500,5.000,5.500,6.000,6.500,7.000,7.500,8.000,8.500,9.000,9.500,10.000,10.500,11.000,11.500,12.000,0.000,0.096,0.195,0.293,0.389,0.492,0.590,0.688,0.779,0.877,0.974,1.071,1.165,1.261,1.356,1.449,1.539,1.627,1.710,1.783,1.840,1.878,1.898,1.908,1.913,1.917,1.926,1.933,1.936,1.939,1.943,1.949,1.953,1.957,1.960,1.965,1.970,1.973,1.978,1.983,1.990,2.000,2.003,2.007,2.010,0.000000000,0.000967937,0.001966122,0.002954225,0.003922162,0.004960678,0.005948780,0.006936882,0.007854406,0.008842509,0.009820528,0.010798548,0.011746320,0.012714257,0.013672111,0.014609800,0.015517241,0.016404517,0.017241379,0.017977415,0.018552127,0.018935269,0.019136923,0.019239766,0.019291188,0.019328494,0.019419238,0.019489816,0.019520065,0.019550313,0.019590643,0.019651139,0.019691470,0.019731801,0.019762049,0.019812462,0.019862876,0.019893124,0.019943537,0.019993950,0.020064529,0.020165356,0.020195604,0.020235935,0.020266183};
+  }
+  //public  List<XYChart> returnCharts() { return charts; }   //I'm trying to embed charts in gui, so this
+  //public XYChart returnAt(int i) { return charts.get(i); }  //  is supposed to help if possible
 
-  public static void main(String args[]) {
+  public static void main(String args[]) throws IOException {
     NMOS test = new NMOS();
+    test.export(2);
   }
 }

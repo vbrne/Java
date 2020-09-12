@@ -14,19 +14,21 @@
  *
  ******************************************************************************/
 
-//package lib;
-
-import org.knowm.xchart.*; //.jar file wasn't working or something, so extracted org folder and it worked
-import java.util.*;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.SwingWrapper;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Display {
   private List<XYChart> charts = new ArrayList<XYChart>();  //List of charts for future matrix display
   private int width = 1000;
   private int height = 500;
-
-  public Display() {}
-//  public void close() { charts = new ArrayList<XYChart>; }
-
+/******************************************************************************/
+/******************************************************************************/
+  //public Display() {} //I didn't know I could omit this
+/******************************************************************************/
+/******************************************************************************/
   private double[] xRange(double lBound, double uBound, int increments) { //To get x-series for Linear Fit
     if (increments == 2) return new double[] {lBound, uBound};
     double[] tmp = new double[increments];
@@ -35,14 +37,14 @@ public class Display {
       tmp[i] = lBound + (i * incVal);
     return tmp;
   }
-
   private double[] yRange(double[] x, double intercept, double slope) { //To get y-series for Linear Fit
     double[] tmp = new double[x.length];
     for (int i = 0; i < x.length; i++)    //Calculates y value for each x in array
       tmp[i] = slope * x[i] + intercept;
     return tmp;
   }
-
+/******************************************************************************/
+/******************************************************************************/
   public void addChart(String nam, double[] x, double[] y, double intercept, double slope, double lBound, double uBound) {
     XYChart tmpch = new XYChartBuilder()
                         .width(width)
@@ -54,38 +56,64 @@ public class Display {
 
     tmpch.addSeries("Current vs Voltage", x, y);      //Adds data values to said chart
 
-               //Calculates Upper Bound for Linear Fit
-    System.out.println("uBound: " + uBound + "\nlBound: " + lBound);
-    double[] xData = xRange(lBound, uBound, 2);      //Creates x-series
+    double[] xData = xRange(lBound, uBound, 2);       //Creates x-series
     double[] yData = yRange(xData, intercept, slope); //Creates y-series
     tmpch.addSeries("\'Linear Fit\'", xData, yData);  //Adds Series to said chart
-    //^^Isn't working well yet ;-;
-    //THOUGHTS: Get lBound from threshold / usable I_eq from Lambda :thinking_emoji:
 
     charts.add(tmpch);                                //Adds chart to chart array
   }
-
+/******************************************************************************/
+/******************************************************************************/
   public void addChart(String nam, double[] x, double[] y) {  //Mainly used for debugging/developing
-    XYChart tmpch = new XYChartBuilder()
-                        .width(width)
-                        .height(height)
-                        .title(nam)
-                        .xAxisTitle("Voltage (V)")
-                        .yAxisTitle("Current (mA)")
-                        .build();
-
-    //tmpch.getStyler().setLegendPosition(LegendPosition.InsideSE); //Didn't work
+    XYChart tmpch = new XYChartBuilder().width(width).height(height).title(nam).xAxisTitle("Voltage (V)").yAxisTitle("Current (mA)").build();
     tmpch.addSeries("Current vs Voltage", x, y);
 
     charts.add(tmpch);
   }
+/******************************************************************************/
+/******************************************************************************/
+  public void addThresholdChart(Threshold Th) {
+    XYChart tmpch = new XYChartBuilder().width(width).height(height).title("Threshold").xAxisTitle("Voltage (V)").yAxisTitle("Current (sqrt(mA))").build();
+    tmpch.addSeries("Root of Current vs Voltage", Th.VGS, Th.sqrtIDS);
 
-  public List<XYChart> returnCharts() { return charts; }    //I'm trying to embed charts in gui, so this
-  public XYChart returnAt(int i) { return charts.get(i); }  //  is supposed to help if possible
+    double[] XLF = new double[] {Th.THRESHOLD, Th.V_GS_eq[Th.V_GS_eq.length - 1]};
+    double[] YLF = yRange(XLF, Th.INTERCEPT, Th.SLOPE);
+    tmpch.addSeries("\'Linear Fit\'", XLF, YLF);
 
+    charts.add(tmpch);
+  }
+/******************************************************************************/
+/******************************************************************************/
+  public void addLambdaChart(Lambda La) {
+    XYChart tmpch = new XYChartBuilder().width(width).height(height).title("Lambda").xAxisTitle("Voltage (V)").yAxisTitle("Current (mA)").build();
+    tmpch.addSeries("Current vs Voltage", La.VDS, La.IDS);
+
+    double[] XLF = new double[] {La.sat_V_DS[0], La.sat_V_DS[La.sat_V_DS.length - 1]};
+    double[] YLF = yRange(XLF, La.INTERCEPT, La.SLOPE);
+    tmpch.addSeries("\'Linear Fit\'", XLF, YLF);
+
+    charts.add(tmpch);
+  }
+/******************************************************************************/
+/******************************************************************************/
+  // This is just to display a sad face, like if people try to analyze anything that isn't NMOS
+  // Honestly, most of the constants were just Trial-Error 'til I got a face I liked; no thought really
+  public void addF() {
+    XYChart tmpch = new XYChartBuilder()
+                        .width(width)
+                        .height(height)
+                        .title("F")
+                        .build();
+
+    tmpch.addSeries("BOX", new double[] {1, 1, 10, 10, 1}, new double[] {1, 10, 10, 1, 1});
+    tmpch.addSeries("F", new double[] {5, 5, 5.5, 5, 5, 6}, new double[] {4, 5.5, 5.5, 5.5, 7, 7});
+    charts.add(tmpch);
+  }
+/******************************************************************************/
+/******************************************************************************/
   public void showAllCharts() {
-    new SwingWrapper<XYChart>(charts).displayChartMatrix();
-  } //Displays all Charts next to one another
+    new SwingWrapper<XYChart>(charts).displayChartMatrix(); //Displays all Charts next to one another
+  }
 
   public static void main(String args[]) {}
 }

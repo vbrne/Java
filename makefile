@@ -38,6 +38,10 @@ gui: $(dir)/gui.java
 NMOS: $(dir)/NMOS.java
 	javac -cp $(cp) -d $(cp) $(dir)/NMOS.java
 	java -cp $(cp) NMOS
+	
+Export: $(dir)/Export.java
+	javac -cp $(cp) -d $(cp) $(dir)/Export.java
+	java -cp $(cp) Export
 
 ### ~NOTES~ ###
 # 20.8.20 Commented out "package Java" from each code because it was messing with the classpaths(?)

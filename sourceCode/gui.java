@@ -17,8 +17,6 @@
  *
  ******************************************************************************/
 
- //package lib;
-
 import java.awt.event.*;
 import javax.swing.*;
 import org.knowm.xchart.*;
@@ -71,11 +69,13 @@ public class gui {
         String dev = "<html><span style='font-size:12px'>Selected: "
                     + sel + "</span></html>";
         pickedd.setText(dev);
-        if (sel == "-") { /* Do Nothing */ }
-        if (sel == "DIODE") { /* Run DIODE tests */ }
-        if (sel == "NMOS") { new NMOS(); }
-        if (sel == "PMOS") { /* Run PMOS tests */ }
-        if (sel == "BJT") { /* Run BJT tests */ }
+
+        NMOS n;
+
+        if (sel == "DIODE") new NMOS(false);
+        if (sel == "NMOS") n = new NMOS();
+        if (sel == "PMOS") new NMOS(false);
+        if (sel == "BJT") new NMOS(false);
       }
     });
 
