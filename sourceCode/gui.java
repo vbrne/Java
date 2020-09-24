@@ -17,15 +17,18 @@
  *
  ******************************************************************************/
 
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.*;			// For gui
+import java.awt.*;				// For gui
+import java.awt.event.*;	// The above didn't cut it for some reason :/
+
 import org.knowm.xchart.*;
 import java.util.*;
 
 //guru99.com/java-swing-gui.html#1
+//https://www.guru99.com/java-swing-gui.html
 // I'm following this guide: javatpoint.com/java-swing
 
-public class gui {
+public class gui { /*
   public static void main(String args[]) {
     int xWin = 900;
     int yWin = 290;
@@ -54,12 +57,12 @@ public class gui {
     picker.setBounds(xStart + 180, yStart, 140, 30);
 
     // Good enough
-    // Confirms picked selection
+    // Confirms picked selection in text
     JLabel pickedd = new JLabel();
     pickedd.setBounds(xStart + 333, yStart + 30, 250, 30);
 
     // Needs Work
-    // Box to Analyze
+    // Box to "Analyze"
     JButton picked = new JButton("Analyze!");
     picked.setBounds(xStart + 335, yStart, 140,30);
     picked.addActionListener(new ActionListener() {
@@ -73,14 +76,14 @@ public class gui {
         NMOS n;
 
         if (sel == "DIODE") new NMOS(false);
-        if (sel == "NMOS") n = new NMOS();
+        if (sel == "NMOS") runNMOS(w);
         if (sel == "PMOS") new NMOS(false);
         if (sel == "BJT") new NMOS(false);
       }
     });
 
     // Fully Funnctional
-    // Exits Application
+    // Box to Exit Application
     JButton endButton = new JButton("Exit");
     int endXSize = 90;
     int endYSize = 30;
@@ -95,8 +98,11 @@ public class gui {
     w.add(title);
     w.add(pick);
     w.add(picker);
-    w.add(pickedd);
+    //w.add(pickedd);
     w.add(picked);
+    //w.add(top);
+    //w.add(bot);
+    //w.add(export);
     w.add(endButton);
 
     // Window Settings
@@ -104,4 +110,88 @@ public class gui {
     w.setLayout(null);
     w.setVisible(true);
   }
+  */
+  public static void main(String args[]) {
+  	// ******************
+  	// Creating the Frame
+  	JFrame frame = new JFrame("Semiconductor Parameter Analyzer");
+  	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  	frame.setSize(300,300);
+  	
+  	// **********************************
+  	// Creating the MenuBar w/ components
+  	JMenuBar bar = new JMenuBar();
+  	
+  	// Exporting menu in bar
+  	JMenu menuExport = new JMenu("Export");
+  	bar.add(menuExport);
+  	
+  	// NMOS Menu in Exporting Menu
+  	JMenu nmos = new JMenu("NMOS");
+  	nmos.setMnemonic(KeyEvent.VK_N);
+  	
+  	// Threshold Export in NMOS Menu
+  	JMenuItem exportThresh = new JMenuItem("Export Threshold.csv");
+  	exportThresh.setAccelerator(KeyStroke.getKeyStroke(
+  			KeyEvent.VK_T, ActionEvent.ALT_MASK));
+  	nmos.add(exportThresh);
+  	
+  	// Lambda Export Item in NMOS Menu
+  	JMenuItem exportLamb = new JMenuItem("Export Lambda.csv");
+  	exportLamb.setAccelerator(KeyStroke.getKeyStroke(
+  			KeyEvent.VK_L, ActionEvent.ALT_MASK));
+  	nmos.add(exportLamb);
+  	menuExport.add(nmos);
+  	
+  	// ************************************
+  	// Creating Panel for Center Components
+  	JPanel panel = new JPanel();
+  	
+  	// "Choose a device:" text
+  	JLabel label = new JLabel("<html><span style='font-size:14px'>Choose a device:</span></html>");
+  	panel.add(label);
+  	
+  	// List of devices to chose from
+  	String devices[] = {"-", "DIODE", "NMOS", "PMOS", "BJT"};
+    JComboBox<String> combo = new JComboBox<>(devices);
+    panel.add(combo);
+    
+    // Button to Analyze
+    JButton button = new JButton("Analyze!");
+    panel.add(button);
+  	
+  	// ***************************
+  	// Creating Bottom Exit Button
+  	JButton exit = new JButton("Exit");
+  	exit.addActionListener(new ActionListener() {
+  		public void actionPerformed(ActionEvent E) {
+  			System.exit(0);
+			}
+		});
+		
+		// ******************************
+		// Adding everything to the frame
+		frame.getContentPane().add(BorderLayout.NORTH, bar);
+		frame.getContentPane().add(BorderLayout.CENTER, panel);
+		frame.getContentPane().add(BorderLayout.SOUTH, exit);
+		frame.setVisible(true);
+	}
+  
+  static void runNMOS(JFrame w) {
+  	//NMOS n = new NMOS();
+  	
+  	// In Development
+    // Checkboxes for Export function
+    JCheckBox top = new JCheckBox("Export Threshold");
+    JCheckBox bot = new JCheckBox("Export Lambda");
+    
+    // In Development
+    // Box to Export 
+    JButton export = new JButton("Export");
+    export.setBounds(510, 160, 140, 30);
+  	
+  	w.add(export);
+  	
+  	w.setVisible(true);
+  } 
 }
