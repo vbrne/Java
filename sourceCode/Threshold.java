@@ -49,8 +49,8 @@ public class Threshold {
   // Find Saturation  Region
     int start = currStart(I);                 // Finds starting indices of the Saturation Region
 
-    I_eq = newArr(start, sqrtIDS);  // Current at the Saturation Region
-    V_GS_eq = newArr(start, V_GS);  // Gate voltages at the Saturation Region
+    I_eq = newArr(start, sqrtIDS);            // Current at the Saturation Region
+    V_GS_eq = newArr(start, V_GS);            // Gate voltages at the Saturation Region
 
   // Linear Regression
     LinearFit fit = new LinearFit(V_GS_eq, I_eq); // Applies LinearReagression to Plot values

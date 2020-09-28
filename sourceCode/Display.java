@@ -16,6 +16,7 @@
 
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.SwingWrapper;
 import java.util.List;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class Display {
   }
   private double[] yRange(double[] x, double intercept, double slope) { //To get y-series for Linear Fit
     double[] tmp = new double[x.length];
-    for (int i = 0; i < x.length; i++)    //Calculates y value for each x in array
+    for (int i = 0; i < x.length; i++)              //Calculates y value for each x in array
       tmp[i] = slope * x[i] + intercept;
     return tmp;
   }
@@ -113,6 +114,10 @@ public class Display {
 /******************************************************************************/
   public void showAllCharts() {
     new SwingWrapper<XYChart>(charts).displayChartMatrix(); //Displays all Charts next to one another
+  }
+
+  public XChartPanel getPanel() {
+    return new SwingWrapper<XYChart>(charts).getXChartPanel(0);
   }
 
   public static void main(String args[]) {}

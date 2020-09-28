@@ -16,6 +16,7 @@
 import org.knowm.xchart.*;  //Testing out things with the charts
 import java.util.*;         //Testing out things with the charts
 import java.io.*;						//For IOException?
+import org.knowm.xchart.XChartPanel;
 
 import java.lang.Math;      //To get more variety during testing
 
@@ -23,7 +24,10 @@ public class NMOS {
   private List<XYChart> charts = new ArrayList<XYChart>();
   Threshold Thresh;
   Lambda Lamb;
+  Display Charts;
+  double[] dats = new double[4];
 
+  // Displays 'F'... that's it...
   public NMOS(boolean fl) { Display tmp = new Display(); tmp.addF(); tmp.showAllCharts(); }
 
   public NMOS() {
@@ -33,28 +37,35 @@ public class NMOS {
     Commute Coms = new Commute();
     double[] threshList = Coms.threshList();
     ****************************************************************************/
-    double[] threshList = getThreshValues();
-    Thresh = new Threshold(threshList);
+    double[] threshList = getThreshValues();    // Gets data to use in Threshold Class
+    Thresh = new Threshold(threshList);         // Runs Threshold Tests
+    dats[0] = Thresh.THRESHOLD;                 // Stores Theshold Calculated
+    dats[1] = Thresh.KN;                        // Stores kn Calculated
    /****************************************************************************
     Coms.returnThresh(Thresh.threshold());
 
     double[] lambList = Coms.lambdaList();
     ****************************************************************************/
-    double[] lambList = getLambdaValues();
-    Lamb = new Lambda(lambList);
+    double[] lambList = getLambdaValues();    // Gets data to use in Lambda Class
+    Lamb = new Lambda(lambList);              // Runs Lambda Tests
+    dats[2] = Lamb.LAMBDA;                    // Stores Lambda Calculated
 
-    Display Charts = new Display();
-    Charts.addThresholdChart(Thresh);
-    Charts.addLambdaChart(Lamb);
-    Charts.showAllCharts();
+    Charts = new Display();                   // Initializes new Display Class
+    Charts.addThresholdChart(Thresh);         // Creates Charts from Threshold Data
+    Charts.addLambdaChart(Lamb);              // Creates Charts from Lambda Data
+    //Charts.showAllCharts();                   // Displays Charts on Seperate JFrame (big sad;-;)
   }
 
-  public void export(int fl) throws IOException {
-    if (fl == 0)
+  public XChartPanel getPanel() {             // For Testing
+    return Charts.getPanel();                 // Returns Chart Panel (?)
+  }
+
+  public void export(int fl) throws IOException { // Exporting Function
+    if (fl == 0)                              // Exports Only Threshold values to *.csv
       new Export().exportThresh(Thresh);
-    if (fl == 1)
+    if (fl == 1)                              // Exports Only Lambda values to *.csv
       new Export().exportLamb(Lamb);
-    if (fl == 2) {
+    if (fl == 2) {                            // Exports All values to *.csv
       new Export().exportThresh(Thresh);
       new Export().exportLamb(Lamb);
     }
