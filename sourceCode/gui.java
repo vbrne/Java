@@ -46,6 +46,7 @@ public class gui {
 		createFrame();	// Creates JFrame (window)
 		createBar();		// Creates Menu Bar
 		createPanel();	// Creates Center Panel
+		//createScroll();
 		createExit();		// Creates Exit Button
 		updateFrame();	// Adds/Updates elements to Frame
   }
@@ -55,7 +56,8 @@ public class gui {
 	private void createFrame() {
 		frame = new JFrame("Semiconductor Parameter Analyzer");	// Initializes window with title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		// Exits application when closing window
-		frame.setSize(300,300);																	// Arbitrary window size
+		frame.setSize(1240,700);																// Arbitrary window size
+		frame.setLayout(new BorderLayout( ));
 	}
 
 	/****************************************************************************************************/
@@ -87,12 +89,15 @@ public class gui {
 
 		// Adds item to bar
   	menuExport.add(nmos);																		// Adds NMOS Menu to Export Menu
+
+		frame.getContentPane().add(BorderLayout.NORTH, bar);		// Adds Bar to the Top of the Window
 	}
 
 	/****************************************************************************************************/
 	// Creating Panel for Center Components
 	private void createPanel() {															// Initializes center Panel
   	panel = new JPanel();
+		//panel.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 
   	// "Choose a device:" text															// Initializes "Choose" Label
   	label = new JLabel("<html><span style='font-size:14px'>Choose a device:</span></html>");
@@ -119,6 +124,13 @@ public class gui {
 	}
 
 	/****************************************************************************************************/
+	// Creating Scroll Bar
+	private void createScroll() {
+		JScrollBar scroll = new JScrollBar(JScrollBar.VERTICAL);
+		frame.getContentPane().add(BorderLayout.EAST, scroll);
+	}
+
+	/****************************************************************************************************/
 	// Creating Bottom Exit Button
 	private void createExit() {
   	exit = new JButton("Exit");															// Initializes "Exit" Button
@@ -127,15 +139,14 @@ public class gui {
   			System.exit(0);																			// Exits Application when clicked
 			}
 		});
+		frame.getContentPane().add(BorderLayout.SOUTH, exit);		// Adds Exit to the Bottom of the Window
 	}
 
 	/****************************************************************************************************/
 	// Adding everything to the frame
 	// Also used to reload if changes
 	private void updateFrame() {
-		frame.getContentPane().add(BorderLayout.NORTH, bar);		// Adds Bar to the Top of the Window
-		frame.getContentPane().add(BorderLayout.CENTER, panel);	// Adds Panel to the Center of the Window
-		frame.getContentPane().add(BorderLayout.SOUTH, exit);		// Adds Exit to the Bottom of the Window
+		frame.getContentPane().add(BorderLayout.WEST, panel);		// Adds Panel to the Center of the Window
 		frame.setVisible(true);
 	}
 	
@@ -143,7 +154,8 @@ public class gui {
 	// NMOS Protocol: Runs NMOS Tests and Displays Data
 	private void runNMOS() {
 		NMOS n = new NMOS();																		// Initializes NMOS Class
-
+		
+		/*
 		// Returning Data:
 		// dats[] = {threshold, kn, lambda, resistance(?)}			// Creates Threshold Label with Data
 		JLabel threshold = new JLabel("Threshold: " + df.format(n.dats[0]));
@@ -152,10 +164,12 @@ public class gui {
 		panel.add(kn);																					// Adds kn Label to the Panel
 		JLabel lambda = new JLabel("Lambda: " + n.dats[2]);			// Creates Lambda Label with Data
 		panel.add(lambda);																			// Adds Lambda Label to the Panel
+		*/
 
 		exportThresh.setEnabled(true);													// Allows Access to Exporting in Menu Bar
 		exportLamb.setEnabled(true);														// ""
-		//panel = n.getPanel();
+		frame.getContentPane().add(BorderLayout.CENTER, n.getThreshPanel());
+		//frame.getContentPane().add(BorderLayout.EAST, n.getLambPanel());
 		updateFrame();																					// Updates Window to show new Labels
 	}
 	

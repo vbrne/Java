@@ -9,7 +9,7 @@ dir=./sourceCode
 all: CompileAll
 
 CompileAll:
-	javac -cp $(cp) -d $(cp) $(dir)/*.java
+	javac -cp $(cp) -d $(cp) -Xlint:unchecked $(dir)/*.java
 
 LinearFit: $(dir)/LinearFit.java
 	javac -d $(cp) $(dir)/LinearFit.java

@@ -21,8 +21,11 @@ import org.knowm.xchart.SwingWrapper;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.swing.*;
+
 public class Display {
   private List<XYChart> charts = new ArrayList<XYChart>();  //List of charts for future matrix display
+  XYChart Threshold_Chart, Lambda_Chart;
   private int width = 1000;
   private int height = 500;
 /******************************************************************************/
@@ -81,6 +84,8 @@ public class Display {
     double[] YLF = yRange(XLF, Th.INTERCEPT, Th.SLOPE);
     tmpch.addSeries("\'Linear Fit\'", XLF, YLF);
 
+    Threshold_Chart = tmpch;
+
     charts.add(tmpch);
   }
 /******************************************************************************/
@@ -92,6 +97,8 @@ public class Display {
     double[] XLF = new double[] {La.sat_V_DS[0], La.sat_V_DS[La.sat_V_DS.length - 1]};
     double[] YLF = yRange(XLF, La.INTERCEPT, La.SLOPE);
     tmpch.addSeries("\'Linear Fit\'", XLF, YLF);
+
+    Lambda_Chart = tmpch;
 
     charts.add(tmpch);
   }
@@ -118,6 +125,14 @@ public class Display {
 
   public XChartPanel getPanel() {
     return new SwingWrapper<XYChart>(charts).getXChartPanel(0);
+  }
+
+  public JPanel getThreshPanel() {
+    return new XChartPanel(Threshold_Chart);
+  }
+
+  public JPanel getLambPanel() {
+    return new XChartPanel(Lambda_Chart);
   }
 
   public static void main(String args[]) {}

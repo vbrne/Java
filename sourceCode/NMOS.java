@@ -20,6 +20,8 @@ import org.knowm.xchart.XChartPanel;
 
 import java.lang.Math;      //To get more variety during testing
 
+import javax.swing.*;
+
 public class NMOS {
   private List<XYChart> charts = new ArrayList<XYChart>();
   Threshold Thresh;
@@ -58,6 +60,16 @@ public class NMOS {
 
   public XChartPanel getPanel() {             // For Testing
     return Charts.getPanel();                 // Returns Chart Panel (?)
+  }
+
+  public JPanel getThreshPanel(){
+    JPanel tmp = Charts.getThreshPanel();
+    return tmp;
+  }
+
+  public JPanel getLambPanel() {
+    JPanel tmp = Charts.getLambPanel();
+    return tmp;
   }
 
   public void export(int fl) throws IOException { // Exporting Function
