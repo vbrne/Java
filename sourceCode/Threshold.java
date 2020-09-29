@@ -56,8 +56,8 @@ public class Threshold {
     LinearFit fit = new LinearFit(V_GS_eq, I_eq); // Applies LinearReagression to Plot values
 
   //Calculations
-    INTERCEPT = fit.intercept;  System.out.println("TH Intercept: " + INTERCEPT);
-    SLOPE = fit.slope;          System.out.println("TH Slope:     " + SLOPE);
+    INTERCEPT = fit.intercept;  //System.out.println("TH Intercept: " + INTERCEPT);
+    SLOPE = fit.slope;          //System.out.println("TH Slope:     " + SLOPE);
     THRESHOLD = (INTERCEPT * -1) / SLOPE; // Solves for Vth
     KN = 2 * SLOPE * SLOPE;               // Solves for kn
     VGS = V_GS;

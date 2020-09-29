@@ -14,14 +14,15 @@
  *
  ******************************************************************************/
 
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.XChartPanel;
-import org.knowm.xchart.SwingWrapper;
 import java.util.List;
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XChartPanel;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
 
 public class Display {
   private List<XYChart> charts = new ArrayList<XYChart>();  //List of charts for future matrix display
@@ -127,10 +128,12 @@ public class Display {
     return new SwingWrapper<XYChart>(charts).getXChartPanel(0);
   }
 
+  @SuppressWarnings("unchecked")  // XChartPanel extends JPanel
   public JPanel getThreshPanel() {
     return new XChartPanel(Threshold_Chart);
   }
 
+  @SuppressWarnings("unchecked")  // XChartPanel extends JPanel
   public JPanel getLambPanel() {
     return new XChartPanel(Lambda_Chart);
   }

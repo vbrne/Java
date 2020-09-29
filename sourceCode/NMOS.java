@@ -20,7 +20,7 @@ import org.knowm.xchart.XChartPanel;
 
 import java.lang.Math;      //To get more variety during testing
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 public class NMOS {
   private List<XYChart> charts = new ArrayList<XYChart>();
@@ -56,10 +56,6 @@ public class NMOS {
     Charts.addThresholdChart(Thresh);         // Creates Charts from Threshold Data
     Charts.addLambdaChart(Lamb);              // Creates Charts from Lambda Data
     //Charts.showAllCharts();                   // Displays Charts on Seperate JFrame (big sad;-;)
-  }
-
-  public XChartPanel getPanel() {             // For Testing
-    return Charts.getPanel();                 // Returns Chart Panel (?)
   }
 
   public JPanel getThreshPanel(){

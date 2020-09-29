@@ -17,35 +17,52 @@
  *
  ******************************************************************************/
 
-import javax.swing.*;						// For gui
-import java.awt.*;							// For gui
-import java.awt.event.*;				// The above didn't cut it for some reason :/
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.Insets;
 
-import java.text.DecimalFormat;	// For formatting displayed data
+import java.io.IOException;             // For exporting function
 
-import org.knowm.xchart.*;			// For Testing
-import java.util.*;							// --?
+import java.text.DecimalFormat;			    // For formatting displayed data
 
-//guru99.com/java-swing-gui.html#1
-//https://www.guru99.com/java-swing-gui.html
-// I'm following this guide: javatpoint.com/java-swing
+import javax.swing.AbstractAction;
+import javax.swing.border.EmptyBorder;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.KeyStroke;
 
 public class gui {
 	JFrame frame;
 	JMenuBar bar;
 	JMenu menuExport, nmos;
-	JMenuItem exportThresh, exportLamb;
-	JPanel panel;
-	JLabel label;
+	JMenuItem exportLamb, exportThresh;
+	JPanel chartsPanel, leftPanel, panel;
+	JLabel label, thresholdLabel, knLabel, lambdaLabel;
 	JComboBox<String> combo;
 	JButton button, exit;
+
+  NMOS n;
+  boolean nFlag = false;
 
 	private static DecimalFormat df = new DecimalFormat("0.000");
   
 	public  gui() {
 		createFrame();	// Creates JFrame (window)
 		createBar();		// Creates Menu Bar
-		createPanel();	// Creates Center Panel
+		//createPanel();	// Creates Center Panel
+		createLeftPanel();
 		//createScroll();
 		createExit();		// Creates Exit Button
 		updateFrame();	// Adds/Updates elements to Frame
@@ -56,7 +73,7 @@ public class gui {
 	private void createFrame() {
 		frame = new JFrame("Semiconductor Parameter Analyzer");	// Initializes window with title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		// Exits application when closing window
-		frame.setSize(1240,700);																// Arbitrary window size
+		frame.setSize(1280,720);																// Arbitrary window size
 		frame.setLayout(new BorderLayout( ));
 	}
 
@@ -74,14 +91,26 @@ public class gui {
   	nmos.setMnemonic(KeyEvent.VK_N);												// Adds 'N' keypress as shortcut
 
   	// Threshold Export in NMOS Menu
-  	exportThresh = new JMenuItem("Export Threshold.csv");		// Initializes Item for previous Menu
+  	// Initializes Item for previous Menu
+    exportThresh = new JMenuItem(new AbstractAction("Export Threshold.csv") {
+      public void actionPerformed(ActionEvent e) {
+        try { n.export(0); }
+        catch (IOException e2) { System.out.println("!-- Could not Export Threshold.csv --!"); }
+      }
+    });
   	exportThresh.setAccelerator(KeyStroke.getKeyStroke(			// Adds ALT+T as shortcut
   			KeyEvent.VK_T, ActionEvent.ALT_MASK));
   	exportThresh.setEnabled(false);													// Initializes as inaccessable
   	nmos.add(exportThresh);																	// Adds to NMOS Menu
 
   	// Lambda Export Item in NMOS Menu
-  	exportLamb = new JMenuItem("Export Lambda.csv");				// Initializes Item for previous Menu
+    // Initializes Item for previous Menu
+    exportLamb = new JMenuItem(new AbstractAction("Export Lambda.csv") {
+      public void actionPerformed(ActionEvent e) {
+        try { n.export(1); }
+        catch (IOException e2) { System.out.println("!-- Could not Export Lambda.csv --!"); }
+      }
+    });
   	exportLamb.setAccelerator(KeyStroke.getKeyStroke(				// Adds ALT+L as shortcut
   			KeyEvent.VK_L, ActionEvent.ALT_MASK));
 		exportLamb.setEnabled(false);														// Initializes as inaccessable
@@ -94,10 +123,9 @@ public class gui {
 	}
 
 	/****************************************************************************************************/
-	// Creating Panel for Center Components
-	private void createPanel() {															// Initializes center Panel
+	// Creating Panel for Center Components 
+	/*private void createPanel() {															// Initializes center Panel
   	panel = new JPanel();
-		//panel.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 
   	// "Choose a device:" text															// Initializes "Choose" Label
   	label = new JLabel("<html><span style='font-size:14px'>Choose a device:</span></html>");
@@ -121,6 +149,55 @@ public class gui {
   		}
 		});
     panel.add(button);																			// Adds "Analyze" Button to Panel
+	} */
+
+	private void createLeftPanel() {
+		leftPanel = new JPanel();
+
+		BoxLayout boxlayout = new BoxLayout(leftPanel, BoxLayout.Y_AXIS);
+
+		leftPanel.setLayout(boxlayout);
+
+		leftPanel.setBorder(new EmptyBorder(new Insets(10, 16, 10, 16)));
+
+		// "Choose a device:" text															// Initializes "Choose" Label
+  	label = new JLabel("<html><span style='font-size:14px'>Choose a device:</span></html>");
+  	leftPanel.add(label);																		// Adds Label to Panel
+
+		JButton nButton = new JButton("NMOS");
+		nButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				runNMOS();
+			}
+		});
+		leftPanel.add(nButton);
+		
+    /*
+  	// List of devices to chose from												// "List" of devices
+  	String devices[] = {"-", "DIODE", "NMOS", "PMOS", "BJT"};
+    combo = new JComboBox<>(devices);												// Initializes Combo-Box for devices
+		combo.setSize(150,80);
+    //leftPanel.add(combo);																	// Adds Combo-Box to Panel 
+    */
+    
+    /*
+    // Button to Analyze
+    button = new JButton("Analyze!");												// Initializes "Analyze" Button
+    button.addActionListener(new ActionListener() {					// Listens for Action on "Analyze" Button
+    	public void actionPerformed( ActionEvent e) {
+    		int ind = combo.getSelectedIndex();
+    		String sel = devices[ind];													// Checks which device is selected
+    		if (sel == "NMOS") 																	// Checks if "NMOS" is selected
+					runNMOS();																				// Runs NMOS protocol
+				else 
+					new NMOS(false);																	// Displays 'F' if NMOS isn't selected
+  		}
+		});
+    //leftPanel.add(button);																// Adds "Analyze" Button to Panel
+    */
+
+    JLabel seperator = new JLabel("-------");
+    leftPanel.add(seperator);
 	}
 
 	/****************************************************************************************************/
@@ -146,32 +223,63 @@ public class gui {
 	// Adding everything to the frame
 	// Also used to reload if changes
 	private void updateFrame() {
-		frame.getContentPane().add(BorderLayout.WEST, panel);		// Adds Panel to the Center of the Window
+		frame.getContentPane().add(BorderLayout.WEST, leftPanel); // Adds Panel to the Center of the Window
 		frame.setVisible(true);
 	}
 	
 	/****************************************************************************************************/
 	// NMOS Protocol: Runs NMOS Tests and Displays Data
 	private void runNMOS() {
-		NMOS n = new NMOS();																		// Initializes NMOS Class
-		
-		/*
+    if (nFlag) {
+      runNMOS(nFlag);
+      return;
+    }
+
+    nFlag = true;
+
+		n = new NMOS();																		      // Initializes NMOS Class
+
 		// Returning Data:
 		// dats[] = {threshold, kn, lambda, resistance(?)}			// Creates Threshold Label with Data
-		JLabel threshold = new JLabel("Threshold: " + df.format(n.dats[0]));
-		panel.add(threshold);																		// Adds Threshold Label to the Panel
-		JLabel kn = new JLabel("kn: " + df.format(n.dats[1]));	// Creates kn Label with Data
-		panel.add(kn);																					// Adds kn Label to the Panel
-		JLabel lambda = new JLabel("Lambda: " + n.dats[2]);			// Creates Lambda Label with Data
-		panel.add(lambda);																			// Adds Lambda Label to the Panel
-		*/
+		thresholdLabel = new JLabel("Threshold: " + df.format(n.dats[0]));
+		leftPanel.add(thresholdLabel);													// Adds Threshold Label to the Panel
 
+		knLabel = new JLabel("kn: " + df.format(n.dats[1]));	  // Creates kn Label with Data
+		leftPanel.add(knLabel);																	// Adds kn Label to the Panel
+    
+		lambdaLabel = new JLabel("Lambda: " + n.dats[2]);			  // Creates Lambda Label with Data
+		leftPanel.add(lambdaLabel);														  // Adds Lambda Label to the Panel
+
+    JLabel seperator = new JLabel("-------");
+    leftPanel.add(seperator);
+    
+		
 		exportThresh.setEnabled(true);													// Allows Access to Exporting in Menu Bar
 		exportLamb.setEnabled(true);														// ""
-		frame.getContentPane().add(BorderLayout.CENTER, n.getThreshPanel());
-		//frame.getContentPane().add(BorderLayout.EAST, n.getLambPanel());
+
+		chartsPanel = new JPanel();
+		chartsPanel.add(n.getThreshPanel());
+		chartsPanel.add(n.getLambPanel());
+    frame.getContentPane().remove(chartsPanel);
+		frame.getContentPane().add(BorderLayout.CENTER, chartsPanel);
 		updateFrame();																					// Updates Window to show new Labels
 	}
+  
+  // If runNMOS() has already run once, this simply runs again and updates instead of creating
+  private void runNMOS(boolean fl) {
+    n = new NMOS();
+
+    thresholdLabel.setText("Threshold: " + df.format(n.dats[0]));
+    knLabel.setText("kn: " + df.format(n.dats[1]));	        // Creates kn Label with Data
+    lambdaLabel.setText("Lambda: " + n.dats[2]);			      // Creates Lambda Label with Data
+    
+		chartsPanel = new JPanel();
+		chartsPanel.add(n.getThreshPanel());
+		chartsPanel.add(n.getLambPanel());
+    frame.getContentPane().remove(chartsPanel);
+		frame.getContentPane().add(BorderLayout.CENTER, chartsPanel);
+		updateFrame();																					// Updates Window to show new Labels
+  }
 	
 	//****************************************************************************************************************
   public static void main(String args[]) {
