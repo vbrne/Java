@@ -13,17 +13,11 @@
  *
  ******************************************************************************/
 
-import org.knowm.xchart.*;  //Testing out things with the charts
-import java.util.*;         //Testing out things with the charts
-import java.io.*;						//For IOException?
-import org.knowm.xchart.XChartPanel;
-
+import java.io.IOException;
 import java.lang.Math;      //To get more variety during testing
-
 import javax.swing.JPanel;
 
 public class NMOS {
-  private List<XYChart> charts = new ArrayList<XYChart>();
   Threshold Thresh;
   Lambda Lamb;
   Display Charts;

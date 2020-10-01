@@ -40,21 +40,26 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 
 public class gui {
 	JFrame frame;
 	JMenuBar bar;
 	JMenu menuExport, nmos;
 	JMenuItem exportLamb, exportThresh;
-	JPanel chartsPanel, leftPanel, panel;
-	JLabel label, thresholdLabel, knLabel, lambdaLabel;
+	JPanel leftPanel, panel;
 	JComboBox<String> combo;
 	JButton button, exit;
 
   NMOS n;
   boolean nFlag = false;
+	JPanel chartsPanel;
+	JLabel thresholdLabel, knLabel, lambdaLabel;
+	JScrollPane chartsScrollPane;
 
 	private static DecimalFormat df = new DecimalFormat("0.000");
   
@@ -73,7 +78,7 @@ public class gui {
 	private void createFrame() {
 		frame = new JFrame("Semiconductor Parameter Analyzer");	// Initializes window with title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		// Exits application when closing window
-		frame.setSize(1280,720);																// Arbitrary window size
+		frame.setSize(240,720);																// Arbitrary window size
 		frame.setLayout(new BorderLayout( ));
 	}
 
@@ -123,34 +128,7 @@ public class gui {
 	}
 
 	/****************************************************************************************************/
-	// Creating Panel for Center Components 
-	/*private void createPanel() {															// Initializes center Panel
-  	panel = new JPanel();
-
-  	// "Choose a device:" text															// Initializes "Choose" Label
-  	label = new JLabel("<html><span style='font-size:14px'>Choose a device:</span></html>");
-  	panel.add(label);																				// Adds Label to Panel
-		
-  	// List of devices to chose from												// "List" of devices
-  	String devices[] = {"-", "DIODE", "NMOS", "PMOS", "BJT"};
-    combo = new JComboBox<>(devices);												// Initializes Combo-Box for devices
-    panel.add(combo);																				// Adds Combo-Box to Panel
-
-    // Button to Analyze
-    button = new JButton("Analyze!");												// Initializes "Analyze" Button
-    button.addActionListener(new ActionListener() {					// Listens for Action on "Analyze" Button
-    	public void actionPerformed( ActionEvent e) {
-    		int ind = combo.getSelectedIndex();
-    		String sel = devices[ind];													// Checks which device is selected
-    		if (sel == "NMOS") 																	// Checks if "NMOS" is selected
-					runNMOS();																				// Runs NMOS protocol
-				else 
-					new NMOS(false);																	// Displays 'F' if NMOS isn't selected
-  		}
-		});
-    panel.add(button);																			// Adds "Analyze" Button to Panel
-	} */
-
+	// Creating Panel for Center Components
 	private void createLeftPanel() {
 		leftPanel = new JPanel();
 
@@ -161,8 +139,16 @@ public class gui {
 		leftPanel.setBorder(new EmptyBorder(new Insets(10, 16, 10, 16)));
 
 		// "Choose a device:" text															// Initializes "Choose" Label
-  	label = new JLabel("<html><span style='font-size:14px'>Choose a device:</span></html>");
+  	JLabel label = new JLabel("<html>" +
+																"<span style='font-size:14px'>" +
+																	"Choose a device:" +
+																"</span>" +
+															"</html>");
   	leftPanel.add(label);																		// Adds Label to Panel
+		leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		//leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		leftPanel.add(new JSeparator()); 
 
 		JButton nButton = new JButton("NMOS");
 		nButton.addActionListener(new ActionListener() {
@@ -172,39 +158,31 @@ public class gui {
 		});
 		leftPanel.add(nButton);
 		
-    /*
-  	// List of devices to chose from												// "List" of devices
-  	String devices[] = {"-", "DIODE", "NMOS", "PMOS", "BJT"};
-    combo = new JComboBox<>(devices);												// Initializes Combo-Box for devices
-		combo.setSize(150,80);
-    //leftPanel.add(combo);																	// Adds Combo-Box to Panel 
-    */
-    
-    /*
-    // Button to Analyze
-    button = new JButton("Analyze!");												// Initializes "Analyze" Button
-    button.addActionListener(new ActionListener() {					// Listens for Action on "Analyze" Button
-    	public void actionPerformed( ActionEvent e) {
-    		int ind = combo.getSelectedIndex();
-    		String sel = devices[ind];													// Checks which device is selected
-    		if (sel == "NMOS") 																	// Checks if "NMOS" is selected
-					runNMOS();																				// Runs NMOS protocol
-				else 
-					new NMOS(false);																	// Displays 'F' if NMOS isn't selected
-  		}
-		});
-    //leftPanel.add(button);																// Adds "Analyze" Button to Panel
-    */
-
-    JLabel seperator = new JLabel("-------");
-    leftPanel.add(seperator);
+    //JLabel seperator = new JLabel("-------");
+    //leftPanel.add(seperator);
+		leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 	}
 
-	/****************************************************************************************************/
-	// Creating Scroll Bar
-	private void createScroll() {
-		JScrollBar scroll = new JScrollBar(JScrollBar.VERTICAL);
-		frame.getContentPane().add(BorderLayout.EAST, scroll);
+	// This is the optional selector for devices
+	private JPanel createBoxAndButton(JPanel p) {
+  	String devices[] = {"-", "DIODE", "NMOS", "PMOS", "BJT"};
+		JComboBox cb = new JComboBox<>(devices);
+		p.add(cb);
+
+		JButton a = new JButton("Analyze!");
+		a.addActionListener(new ActionListener() {						// Listens for Action on "Analyze" Button
+    	public void actionPerformed( ActionEvent e) {
+    		int ind = cb.getSelectedIndex();
+    		String sel = devices[ind];												// Checks which device is selected
+    		if (sel == "NMOS") 																// Checks if "NMOS" is selected
+					runNMOS();																			// Runs NMOS protocol
+				else 
+					new NMOS(false);																// Displays 'F' if NMOS isn't selected
+  		}
+		});
+    p.add(button);																				// Adds "Analyze" Button to Panel
+
+		return p;
 	}
 
 	/****************************************************************************************************/
@@ -239,6 +217,8 @@ public class gui {
 
 		n = new NMOS();																		      // Initializes NMOS Class
 
+		leftPanel.add(new JSeparator()); // Seperator; Prolly going to remove
+
 		// Returning Data:
 		// dats[] = {threshold, kn, lambda, resistance(?)}			// Creates Threshold Label with Data
 		thresholdLabel = new JLabel("Threshold: " + df.format(n.dats[0]));
@@ -249,19 +229,25 @@ public class gui {
     
 		lambdaLabel = new JLabel("Lambda: " + n.dats[2]);			  // Creates Lambda Label with Data
 		leftPanel.add(lambdaLabel);														  // Adds Lambda Label to the Panel
-
-    JLabel seperator = new JLabel("-------");
-    leftPanel.add(seperator);
-    
 		
 		exportThresh.setEnabled(true);													// Allows Access to Exporting in Menu Bar
 		exportLamb.setEnabled(true);														// ""
 
-		chartsPanel = new JPanel();
-		chartsPanel.add(n.getThreshPanel());
-		chartsPanel.add(n.getLambPanel());
-    frame.getContentPane().remove(chartsPanel);
-		frame.getContentPane().add(BorderLayout.CENTER, chartsPanel);
+		chartsPanel = new JPanel();                             // Initializes chartsPanel
+		BoxLayout boxlayout = new BoxLayout(chartsPanel, BoxLayout.Y_AXIS); // Initializes BoxLayout for chartsPanel
+		chartsPanel.setLayout(boxlayout);                       // Sets Layout; BoxLayout == Stacks on top of one another
+		chartsPanel.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5))); // Sets 5-Pixel spacing from Border
+
+		chartsPanel.add(n.getThreshPanel());                    // Loads Threshold Chart to Panel
+		chartsPanel.add(n.getLambPanel());                      // Loads Lambda Chart to Panel
+		
+		chartsScrollPane = new JScrollPane(chartsPanel,         // Initializes ScrollPane (Scrollable-Panel)
+   		ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,     // Only shows ScrollBars as needed
+   		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		chartsScrollPane.getVerticalScrollBar().setUnitIncrement(8); // Sets scroll speed to 8px/increment
+
+		frame.setSize(1280,720);																// Arbitrary window size
+		frame.getContentPane().add(BorderLayout.CENTER, chartsScrollPane);
 		updateFrame();																					// Updates Window to show new Labels
 	}
   

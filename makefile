@@ -43,6 +43,10 @@ Export: $(dir)/Export.java
 	javac -cp $(cp) -d $(cp) $(dir)/Export.java
 	java -cp $(cp) Export
 
+Coms: $(dir)/NMOSComs.java
+	javac -cp $(cp) -d $(cp) $(dir)/NMOSComs.java
+	java -cp $(cp) NMOSComs
+
 ### ~NOTES~ ###
 # 20.8.20 Commented out "package Java" from each code because it was messing with the classpaths(?)
 # 20.8.20 Been having to mess around with compiling and classpaths and stuff ;-;
