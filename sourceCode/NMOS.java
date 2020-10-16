@@ -17,11 +17,17 @@ import java.io.IOException;
 import java.lang.Math;      //To get more variety during testing
 import javax.swing.JPanel;
 
+import java.text.DecimalFormat;
+
 public class NMOS {
   Threshold Thresh;
   Lambda Lamb;
   Display Charts;
   double[] dats = new double[4];
+  String[][] thresholdTable;
+  String[][] lambdaTable;
+
+  private static DecimalFormat df = new DecimalFormat("0.0000");
 
   // Displays 'F'... that's it...
   public NMOS(boolean fl) { Display tmp = new Display(); tmp.addF(); tmp.showAllCharts(); }
@@ -37,6 +43,8 @@ public class NMOS {
     Thresh = new Threshold(threshList);         // Runs Threshold Tests
     dats[0] = Thresh.THRESHOLD;                 // Stores Theshold Calculated
     dats[1] = Thresh.KN;                        // Stores kn Calculated
+    thresholdTable = getTable(Thresh.VGS, Thresh.sqrtIDS);
+
    /****************************************************************************
     Coms.returnThresh(Thresh.threshold());
 
@@ -45,6 +53,7 @@ public class NMOS {
     double[] lambList = getLambdaValues();    // Gets data to use in Lambda Class
     Lamb = new Lambda(lambList);              // Runs Lambda Tests
     dats[2] = Lamb.LAMBDA;                    // Stores Lambda Calculated
+    lambdaTable = getTable(Lamb.VDS, Lamb.IDS);
 
     Charts = new Display();                   // Initializes new Display Class
     Charts.addThresholdChart(Thresh);         // Creates Charts from Threshold Data
@@ -73,6 +82,18 @@ public class NMOS {
     }
   }
 
+  private String[][] getTable(double[] col1, double[] col2) {
+    String[][] arr = new String[col1.length][2];
+    if (col1.length != col2.length) 
+      System.out.println("NMOS.java getTable() Error");
+    else
+      for (int i = 0; i < col1.length; i++) {
+        arr[i][0] = df.format(col1[i]);
+        arr[i][1] = df.format(col2[i]);
+      }
+    return arr;
+  }
+
   private double[] getThreshValues() {  //Function to get variety of values for demonstration/testing purposes
     double[] v1 = {0.000,0.500,1.000,1.500,2.000,2.500,3.000,3.500,4.000,4.500,5.000,5.500,6.000,6.500,7.000,7.500,8.000,8.500,9.000,9.500,9.992,0.000,0.000,0.000,0.000,0.000,0.000,0.035,0.279,0.658,1.072,1.513,1.960,2.419,2.883,3.350,3.814,4.279,4.747,5.217,5.691,6.156, 0.000,0.000,0.000,0.000,0.000,0.000,0.353,2.813,6.634,10.809,15.255,19.762,24.390,29.068,33.777,38.455,43.144,47.862,52.601,57.381,62.069};
     double[] v2 = {0.000,0.500,1.000,1.500,2.000,2.500,3.000,3.500,4.000,4.500,5.000,5.500,6.000,6.500,7.000,7.500,8.000,8.500,9.000,9.500,9.987,0.030,0.000,0.000,0.000,0.008,0.213,0.600,1.030,1.479,1.937,2.399,2.871,3.342,3.811,4.280,4.748,5.215,5.686,6.153,6.620,7.153,0.302,0.000,0.000,0.000,0.081,2.148,6.050,10.385,14.912,19.530,24.188,28.947,33.696,38.425,43.154,47.873,52.581,57.330,62.039,66.747,55.848};
@@ -94,6 +115,12 @@ public class NMOS {
 
   public static void main(String args[]) throws IOException {
     NMOS test = new NMOS();
-    test.export(2);
+    String[][] arr = test.thresholdTable;
+    for (int i = 0; i < arr.length; i++) 
+      System.out.println(arr[i][0] + " : " + arr[i][1]);
+    arr = test.lambdaTable;
+    for (int i = 0; i < arr.length; i++) 
+      System.out.println(arr[i][0] + " : " + arr[i][1]);
+    
   }
 }

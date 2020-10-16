@@ -42,26 +42,39 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.table.TableColumnModel;
 
 public class gui {
+	JButton button;
+	JButton exit;
 	JFrame frame;
+	JLabel flash;
+	JMenu menuExport;
+	JMenu nmos;
 	JMenuBar bar;
-	JMenu menuExport, nmos;
-	JMenuItem exportLamb, exportThresh;
-	JPanel leftPanel, panel;
-	JComboBox<String> combo;
-	JButton button, exit;
+	JMenuItem exportLamb;
+	JMenuItem exportThresh;
+	JPanel botPanel;
+	JPanel leftPanel;
+	JPanel panel;
+	JScrollPane leftScrollPane;
 
   NMOS n;
   boolean nFlag = false;
+	JLabel thresholdLabel;
+	JLabel knLabel;
+	JLabel lambdaLabel;
 	JPanel chartsPanel;
-	JLabel thresholdLabel, knLabel, lambdaLabel;
 	JScrollPane chartsScrollPane;
+	JTable lambdaTable;
+	JTable thresholdTable;
 
 	private static DecimalFormat df = new DecimalFormat("0.000");
+	private final int margin = 2;
   
 	public  gui() {
 		createFrame();	// Creates JFrame (window)
@@ -69,7 +82,8 @@ public class gui {
 		//createPanel();	// Creates Center Panel
 		createLeftPanel();
 		//createScroll();
-		createExit();		// Creates Exit Button
+		createBotPanel();
+		//createExit();		// Creates Exit Button
 		updateFrame();	// Adds/Updates elements to Frame
   }
 
@@ -78,7 +92,7 @@ public class gui {
 	private void createFrame() {
 		frame = new JFrame("Semiconductor Parameter Analyzer");	// Initializes window with title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		// Exits application when closing window
-		frame.setSize(240,720);																// Arbitrary window size
+		frame.setSize(176, 720);																// Arbitrary window size
 		frame.setLayout(new BorderLayout( ));
 	}
 
@@ -131,12 +145,9 @@ public class gui {
 	// Creating Panel for Center Components
 	private void createLeftPanel() {
 		leftPanel = new JPanel();
-
 		BoxLayout boxlayout = new BoxLayout(leftPanel, BoxLayout.Y_AXIS);
-
 		leftPanel.setLayout(boxlayout);
-
-		leftPanel.setBorder(new EmptyBorder(new Insets(10, 16, 10, 16)));
+		leftPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin)));
 
 		// "Choose a device:" text															// Initializes "Choose" Label
   	JLabel label = new JLabel("<html>" +
@@ -144,11 +155,12 @@ public class gui {
 																	"Choose a device:" +
 																"</span>" +
 															"</html>");
+		//label.setHorizontalAlignment(JLabel.CENTER);
   	leftPanel.add(label);																		// Adds Label to Panel
-		leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-		//leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 		leftPanel.add(new JSeparator()); 
+		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 
 		JButton nButton = new JButton("NMOS");
 		nButton.addActionListener(new ActionListener() {
@@ -158,34 +170,35 @@ public class gui {
 		});
 		leftPanel.add(nButton);
 		
-    //JLabel seperator = new JLabel("-------");
-    //leftPanel.add(seperator);
-		leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-	}
+		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 
-	// This is the optional selector for devices
-	private JPanel createBoxAndButton(JPanel p) {
-  	String devices[] = {"-", "DIODE", "NMOS", "PMOS", "BJT"};
-		JComboBox cb = new JComboBox<>(devices);
-		p.add(cb);
-
-		JButton a = new JButton("Analyze!");
-		a.addActionListener(new ActionListener() {						// Listens for Action on "Analyze" Button
-    	public void actionPerformed( ActionEvent e) {
-    		int ind = cb.getSelectedIndex();
-    		String sel = devices[ind];												// Checks which device is selected
-    		if (sel == "NMOS") 																// Checks if "NMOS" is selected
-					runNMOS();																			// Runs NMOS protocol
-				else 
-					new NMOS(false);																// Displays 'F' if NMOS isn't selected
-  		}
-		});
-    p.add(button);																				// Adds "Analyze" Button to Panel
-
-		return p;
+    leftScrollPane = new JScrollPane(leftPanel,
+			ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+			ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		leftScrollPane.getVerticalScrollBar().setUnitIncrement(8);
 	}
 
 	/****************************************************************************************************/
+	private void createBotPanel() {
+		botPanel = new JPanel(new BorderLayout());
+		botPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin)));
+
+		flash = new JLabel("{Flash messages will be displayed here.}");													// For Flash messages like Errors
+		flash.setHorizontalAlignment(JLabel.CENTER);						// Centers Flash Message
+		botPanel.add(BorderLayout.NORTH, flash);								// Sets north of botPanel
+
+		botPanel.add(BorderLayout.CENTER, Box.createRigidArea(new Dimension(0, margin)));
+
+		exit = new JButton("Exit");															// Initializes "Exit" Button
+  	exit.addActionListener(new ActionListener() {						// Listens for Action on "Exit" Button
+  		public void actionPerformed(ActionEvent E) {
+  			System.exit(0);																			// Exits Application when clicked
+			}
+		});
+		botPanel.add(BorderLayout.SOUTH, exit);
+		frame.getContentPane().add(BorderLayout.SOUTH, botPanel);
+	}
+
 	// Creating Bottom Exit Button
 	private void createExit() {
   	exit = new JButton("Exit");															// Initializes "Exit" Button
@@ -201,7 +214,8 @@ public class gui {
 	// Adding everything to the frame
 	// Also used to reload if changes
 	private void updateFrame() {
-		frame.getContentPane().add(BorderLayout.WEST, leftPanel); // Adds Panel to the Center of the Window
+		frame.getContentPane().add(BorderLayout.WEST, leftScrollPane); // Adds Panel to the Center of the Window
+		frame.revalidate();
 		frame.setVisible(true);
 	}
 	
@@ -218,6 +232,7 @@ public class gui {
 		n = new NMOS();																		      // Initializes NMOS Class
 
 		leftPanel.add(new JSeparator()); // Seperator; Prolly going to remove
+		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 
 		// Returning Data:
 		// dats[] = {threshold, kn, lambda, resistance(?)}			// Creates Threshold Label with Data
@@ -229,14 +244,38 @@ public class gui {
     
 		lambdaLabel = new JLabel("Lambda: " + n.dats[2]);			  // Creates Lambda Label with Data
 		leftPanel.add(lambdaLabel);														  // Adds Lambda Label to the Panel
+
+		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 		
 		exportThresh.setEnabled(true);													// Allows Access to Exporting in Menu Bar
 		exportLamb.setEnabled(true);														// ""
 
+		String[] colNames = {"VGS", "sqrtIDS"};
+		String[][] thresholdTableValues = n.thresholdTable;
+		thresholdTable = new JTable(thresholdTableValues, colNames);
+		TableColumnModel colMod = thresholdTable.getColumnModel();
+		//colMod.getColumn(0).setPreferredWidth(50);
+		//colMod.getColumn(1).setPreferredWidth(50);
+		//thresholdTable.setBounds(30,40,200,300);
+		//leftPanel.add(thresholdTable);
+
+		colNames[0] = "VDS"; colNames[1] = "IDS";
+		String[][] lambdaTableValues = n.lambdaTable;
+		lambdaTable = new JTable(lambdaTableValues, colNames);
+		//leftPanel.add(lambdaTable);
+
+		JScrollPane tmp = new JScrollPane(thresholdTable);
+		//tmp.setPreferedSize(new Dimension(170,720));
+		leftPanel.add(tmp);
+
+		tmp = new JScrollPane(lambdaTable);
+		//tmp.setPreferedSize(new Dimension(170,720));
+		leftPanel.add(tmp);
+
 		chartsPanel = new JPanel();                             // Initializes chartsPanel
 		BoxLayout boxlayout = new BoxLayout(chartsPanel, BoxLayout.Y_AXIS); // Initializes BoxLayout for chartsPanel
 		chartsPanel.setLayout(boxlayout);                       // Sets Layout; BoxLayout == Stacks on top of one another
-		chartsPanel.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5))); // Sets 5-Pixel spacing from Border
+		chartsPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin))); // Sets 5-Pixel spacing from Border
 
 		chartsPanel.add(n.getThreshPanel());                    // Loads Threshold Chart to Panel
 		chartsPanel.add(n.getLambPanel());                      // Loads Lambda Chart to Panel
@@ -260,10 +299,19 @@ public class gui {
     lambdaLabel.setText("Lambda: " + n.dats[2]);			      // Creates Lambda Label with Data
     
 		chartsPanel = new JPanel();
+		BoxLayout boxlayout = new BoxLayout(chartsPanel, BoxLayout.Y_AXIS); // Initializes BoxLayout for chartsPanel
+		chartsPanel.setLayout(boxlayout);                       // Sets Layout; BoxLayout == Stacks on top of one another
+		chartsPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin))); // Sets 5-Pixel spacing from Border
 		chartsPanel.add(n.getThreshPanel());
 		chartsPanel.add(n.getLambPanel());
-    frame.getContentPane().remove(chartsPanel);
-		frame.getContentPane().add(BorderLayout.CENTER, chartsPanel);
+
+		frame.getContentPane().remove(chartsScrollPane);
+		chartsScrollPane = new JScrollPane(chartsPanel,         // Initializes ScrollPane (Scrollable-Panel)
+   		ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,     // Only shows ScrollBars as needed
+   		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		chartsScrollPane.getVerticalScrollBar().setUnitIncrement(8); 
+
+		frame.getContentPane().add(BorderLayout.CENTER, chartsScrollPane);
 		updateFrame();																					// Updates Window to show new Labels
   }
 	
