@@ -44,7 +44,7 @@ Export: $(dir)/Export.java
 	java -cp $(cp) Export
 
 Coms: $(dir)/NMOSComs.java
-	javac -cp $(cp) -d $(cp) $(dir)/NMOSComs.java
+	javac -cp $(cp) -d $(cp) -Xlint:unchecked $(dir)/NMOSComs.java
 	java -cp $(cp) NMOSComs
 
 ### ~NOTES~ ###
