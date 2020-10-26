@@ -11,6 +11,7 @@
  *
  ******************************************************************************/
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +20,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 
 import gnu.io.*;  // RXTXComm.jar Library
+
 
 public class NMOSComs {
 
@@ -110,9 +112,9 @@ public class NMOSComs {
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  /**
-  * @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
-  */
+  
+  // @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
+  
   public static HashSet<CommPortIdentifier> getAvailableSerialPorts() {
       HashSet<CommPortIdentifier> h = new HashSet<CommPortIdentifier>();
       Enumeration thePorts = CommPortIdentifier.getPortIdentifiers();
@@ -137,12 +139,15 @@ public class NMOSComs {
 
   public static void main(String[] args) {
     try {
-      //(new NMOSComs()).connect("/dev/ttyUSB0");
-      //new NMOSComs().listPorts();
-      //new NMOSComs().getAvailableSerialPorts();
+      NMOSComs test = new NMOSComs();
+      //for (int i = 0; i < 8; i++);
+      test.connect("/dev/ttyS4");
+      //test.listPorts();
+      //test.getAvailableSerialPorts();
     } 
     catch (Exception e) {
       e.printStackTrace();
     }
   }
 }
+
