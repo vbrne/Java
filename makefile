@@ -51,6 +51,10 @@ Coms2: $(dir)/NMOSComs2.java
 	javac -cp $(cp) -d $(cp) -Xlint:unchecked $(dir)/NMOSComs2.java
 	java -cp $(cp) NMOSComs2
 
+Data: $(dir)/Data.java
+	javac -cp $(cp) -d $(cp) $(dir)/Data.java
+	java -cp $(cp) Data
+
 ### ~NOTES~ ###
 # 20.8.20 Commented out "package Java" from each code because it was messing with the classpaths(?)
 # 20.8.20 Been having to mess around with compiling and classpaths and stuff ;-;
