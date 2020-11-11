@@ -12,19 +12,24 @@
  *
  ******************************************************************************/
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class NMOSComs {
+  public final boolean debug = true;
+
   public final int DACResolution = (int)Math.pow(2, 12);  // 12-bits
   public final int ADCResolution = (int)Math.pow(2, 14);  // 14-bits
   public final double DACMaxVoltage = 2.048;
-  public final double resistor = 100;
+  public final double ADCMaxVoltage = 12.126;
+  public final double dropResistor = 100;
 
   Data ThresholdSweep;
   Data LambdaSweep;
@@ -67,7 +72,7 @@ public class NMOSComs {
       tmp.close();
 
       FileWriter tmp2 = new FileWriter(vth.getName());
-      tmp2.write(getDec(VTH));
+      tmp2.write(toDigital(VTH));
       tmp2.close();
 
       waitForFiles();
@@ -97,13 +102,19 @@ public class NMOSComs {
 
   private void waitForFiles() {
     while(true) {
-      Scanner flag = new Scanner (flg);
-      String strFlag = flag.nextLine();
-      flag.close();
-      
-      if (strFlag == "false") break;              // Check if files were updated
+      try {
+        Scanner flag = new Scanner (flg);
+        String strFlag = flag.nextLine();
+        flag.close();
+        
+        if (strFlag == "false") break;              // Check if files were updated
 
-      try {                                       // Delay
+      } catch (IOException e) {
+        System.err.println(e);
+      }
+
+      // Delay
+      try {
         Thread.sleep(250);
       } catch (InterruptedException ie) {
         Thread.currentThread().interrupt();
@@ -112,30 +123,58 @@ public class NMOSComs {
   }
 
   private Data readFiles() {
-    ArrayList VDS = new ArrayList();
-    ArrayList VGS = new ArrayList();
-    ArrayList DRP = new ArrayList();
-    //Data sweep = new Data(resistor);
+    double[] VDS = getArray(vds);
+    double[] VGS = getArray(vgs);
+    double[] DRP = getArray(drp);
+
+    Data sweep = new Data(VDS, VGS, DRP, dropResistor);
     return null;  // temporary
   }
 
   private double[] getArray(File f) {
-    ArrayList L = new ArrayList();
+    ArrayList<Double> L = new ArrayList<>();
+    String fileName = f.getName();
 
-    return null;  // temporary
+    try {
+      BufferedReader lineReader = new BufferedReader(new FileReader(fileName));
+      String line = null;
+
+      while ((line = lineReader.readLine()) != null) {
+        if (debug) System.out.println("StringRead: " + line);
+
+        int digitalValue = Integer.parseInt(line);
+        if (debug) System.out.println("DigitalRead: " + digitalValue);
+
+        double analogValue = toAnalog(digitalValue);
+        if (debug) System.out.println("AnalogConv.: " + analogValue);
+
+        L.add(analogValue);
+      }
+    } catch (IOException e) {
+      System.err.println(e);
+    }
+
+    return toDoubleArray(L);  // temporary
   }
 
-  private int getDec(double volt) { // Converts Analog Voltage to Digital Voltage
-    return (int)Math.ceil(volt * resolution / maxVoltage / 6); // Formula to convert from analog to digital
+  private double[] toDoubleArray(ArrayList<Double> l) {
+    double[] tmp = new double[l.size()];
+    for (int i = 0; i < l.size(); i++) tmp[i] = l.get(i);
+    return tmp;
   }
 
-  private double getDub(int dec) { // Converts Digital Voltage to Analog Voltage
-    return (dec / resolution * maxVoltage * 6);
+  private int toDigital(double ana) { // Converts Analog Voltage to Digital Voltage
+    return (int)Math.ceil(ana * DACResolution / DACMaxVoltage / 6); // Formula to convert from analog to digital
+  }
+
+  // Possibly not functional ;-; (yet)
+  private double toAnalog(int dig) { // Converts Digital Voltage to Analog Voltage
+    return (dig / ADCResolution * ADCMaxVoltage);
   }
 
   public static void main(String[] args) {
-    NMOSComs n = new NMOSComs();
-    System.out.println(n.getDec(7.578));
-    System.out.println(n.getDub(2526));
+    //NMOSComs n = new NMOSComs();
+    //System.out.println(n.toDigital(7.578));
+    //System.out.println(n.toAnalog(2526));
   }
 }
