@@ -31,7 +31,7 @@ public class Threshold {
   public double[] VGS, IDS, sqrtIDS, I_eq, V_GS_eq;
 
   public Threshold(double[] vals) {
-  // Formatting
+  // Formatting; Going to be converted to taking in Data Object as input
     double[] V_G = new double[21], V_S = new double[21], I = new double[21];  // Divides values do each pin
     for (int i = 0; i < vals.length; i++) {
       if (i < 21)

@@ -4,7 +4,7 @@
  * Computer Engineering
  * Senior Design
  * Spring/Fall 2020
- * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ * Group 15: Bernie Villalon, Samuel Solis, Leo Marroquin
  *
  * Description:
  *   This class is responsible for creating graphs for displaying the data
@@ -29,11 +29,10 @@ public class Display {
   XYChart Threshold_Chart, Lambda_Chart;
   private int width = 1000;
   private int height = 500;
-/******************************************************************************/
-/******************************************************************************/
-  //public Display() {} //I didn't know I could omit this
-/******************************************************************************/
-/******************************************************************************/
+
+  /**
+   * Helper functions to calculate Domains/Ranges for Graph.
+  **/
   private double[] xRange(double lBound, double uBound, int increments) { //To get x-series for Linear Fit
     if (increments == 2) return new double[] {lBound, uBound};
     double[] tmp = new double[increments];
@@ -48,35 +47,10 @@ public class Display {
       tmp[i] = slope * x[i] + intercept;
     return tmp;
   }
-/******************************************************************************/
-/******************************************************************************/
-  public void addChart(String nam, double[] x, double[] y, double intercept, double slope, double lBound, double uBound) {
-    XYChart tmpch = new XYChartBuilder()
-                        .width(width)
-                        .height(height)
-                        .title(nam)
-                        .xAxisTitle("Voltage (V)")
-                        .yAxisTitle("Current (mA)")
-                        .build();                     //Creates new Chart
 
-    tmpch.addSeries("Current vs Voltage", x, y);      //Adds data values to said chart
-
-    double[] xData = xRange(lBound, uBound, 2);       //Creates x-series
-    double[] yData = yRange(xData, intercept, slope); //Creates y-series
-    tmpch.addSeries("\'Linear Fit\'", xData, yData);  //Adds Series to said chart
-
-    charts.add(tmpch);                                //Adds chart to chart array
-  }
-/******************************************************************************/
-/******************************************************************************/
-  public void addChart(String nam, double[] x, double[] y) {  //Mainly used for debugging/developing
-    XYChart tmpch = new XYChartBuilder().width(width).height(height).title(nam).xAxisTitle("Voltage (V)").yAxisTitle("Current (mA)").build();
-    tmpch.addSeries("Current vs Voltage", x, y);
-
-    charts.add(tmpch);
-  }
-/******************************************************************************/
-/******************************************************************************/
+  /**
+   * Converts Threshold Sweep value into Chart form.
+  **/
   public void addThresholdChart(Threshold Th) {
     XYChart tmpch = new XYChartBuilder().width(width).height(height).title("Threshold").xAxisTitle("Voltage (V)").yAxisTitle("Current (sqrt(mA))").build();
     tmpch.addSeries("Root of Current vs Voltage", Th.VGS, Th.sqrtIDS);
@@ -89,8 +63,10 @@ public class Display {
 
     charts.add(tmpch);
   }
-/******************************************************************************/
-/******************************************************************************/
+
+  /**
+   * Converts Lambda Sweep values into Chart form.
+  **/
   public void addLambdaChart(Lambda La) {
     XYChart tmpch = new XYChartBuilder().width(width).height(height).title("Lambda").xAxisTitle("Voltage (V)").yAxisTitle("Current (mA)").build();
     tmpch.addSeries("Current vs Voltage", La.VDS, La.IDS);
@@ -103,10 +79,10 @@ public class Display {
 
     charts.add(tmpch);
   }
-/******************************************************************************/
-/******************************************************************************/
-  // This is just to display a sad face, like if people try to analyze anything that isn't NMOS
-  // Honestly, most of the constants were just Trial-Error 'til I got a face I liked; no thought really
+
+  /**
+   * Displays "F" in chart form.
+  **/
   public void addF() {
     XYChart tmpch = new XYChartBuilder()
                         .width(width)
@@ -118,25 +94,28 @@ public class Display {
     tmpch.addSeries("F", new double[] {5, 5, 5.5, 5, 5, 6}, new double[] {4, 5.5, 5.5, 5.5, 7, 7});
     charts.add(tmpch);
   }
-/******************************************************************************/
-/******************************************************************************/
+
+  /**
+   * Not in use
+  **/
   public void showAllCharts() {
     new SwingWrapper<XYChart>(charts).displayChartMatrix(); //Displays all Charts next to one another
   }
 
-  public XChartPanel getPanel() {
-    return new SwingWrapper<XYChart>(charts).getXChartPanel(0);
-  }
-
+  /**
+   * Functions to get JPanels for GUI
+  **/
   @SuppressWarnings("unchecked")  // XChartPanel extends JPanel
   public JPanel getThreshPanel() {
     return new XChartPanel(Threshold_Chart);
   }
-
   @SuppressWarnings("unchecked")  // XChartPanel extends JPanel
   public JPanel getLambPanel() {
     return new XChartPanel(Lambda_Chart);
   }
 
+  /**
+   * "Main" function; not in use
+  **/
   public static void main(String args[]) {}
 }

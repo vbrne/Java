@@ -4,7 +4,7 @@
  * Computer Engineering
  * Senior Design
  * Spring/Fall 2020
- * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ * Group 15: Bernie Villalon, Samuel Solis, Leo Marroquin
  *
  * Description:
  *   This is a Basic Graphic User Interface for the Semiconductor Parameter
@@ -87,8 +87,9 @@ public class gui {
 		updateFrame();	// Adds/Updates elements to Frame
   }
 
-	/****************************************************************************************************/
-	// Creating the Frame
+	/****************************************************************************************************
+	 * Creating the Frame
+	**/
 	private void createFrame() {
 		frame = new JFrame("Semiconductor Parameter Analyzer");	// Initializes window with title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		// Exits application when closing window
@@ -96,8 +97,9 @@ public class gui {
 		frame.setLayout(new BorderLayout( ));
 	}
 
-	/****************************************************************************************************/
-	// Creating the MenuBar w/ components
+	/****************************************************************************************************
+	 * Creating the MenuBar w/ components
+	**/
 	private void createBar() {
   	bar = new JMenuBar();																		// Initializes Menu Bar
 		
@@ -141,8 +143,9 @@ public class gui {
 		frame.getContentPane().add(BorderLayout.NORTH, bar);		// Adds Bar to the Top of the Window
 	}
 
-	/****************************************************************************************************/
-	// Creating Panel for Center Components
+	/****************************************************************************************************
+	 * Creating Panel for Center Components
+	**/
 	private void createLeftPanel() {
 		leftPanel = new JPanel();
 		BoxLayout boxlayout = new BoxLayout(leftPanel, BoxLayout.Y_AXIS);
@@ -178,7 +181,9 @@ public class gui {
 		leftScrollPane.getVerticalScrollBar().setUnitIncrement(8);
 	}
 
-	/****************************************************************************************************/
+	/****************************************************************************************************
+	 * Creating Bottom Panel
+	**/
 	private void createBotPanel() {
 		botPanel = new JPanel(new BorderLayout());
 		botPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin)));

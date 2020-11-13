@@ -4,7 +4,7 @@
  * Computer Engineering
  * Senior Design
  * Spring/Fall 2020
- * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ * Group 15: Bernie Villalon, Samuel Solis, Leo Marroquin
  *
  * Description:
  *   This Class is responsible for exporting the data gathered and used onto a
@@ -21,6 +21,9 @@ public class Export {
   FileWriter write;
   ArrayList<String[]> list = new ArrayList<String[]>();
 
+  /**
+   * Converts Threshold Sweep (Sweep 1) into Comma-Seperated-Values (CSV) and writes out to file.
+  **/
   public void exportThresh(Threshold Th) throws IOException {
     list.add(new String[] {"VGS", "IDS", "sqrtIDS", "V_GS_Eq", "I_Eq", "Threshold", "Kn"});
     list.add(toStringArr(Th.VGS));
@@ -34,6 +37,9 @@ public class Export {
     export("Threshold.csv");
   }
 
+  /**
+   * Converts Lambda Sweep (Sweep 2) into Comma-Seperated-Values (CSV) and writes out to file.
+  **/
   public void exportLamb(Lambda La) throws IOException {
     list.add(new String[] {"VDS", "IDS", "Sriode V_DS", "Sriode I_DS", "Saturation V_DS", "Saturation I_DS", "Lambda", "Resistance"});
     list.add(toStringArr(La.VDS));
@@ -48,6 +54,9 @@ public class Export {
     export("Lambda.csv");
   }
 
+  /**
+   * Helper function to write out CSV to file
+  **/
   private void export(String name) throws IOException {
     File file = new File(name);
     file.createNewFile();
@@ -72,6 +81,9 @@ public class Export {
     System.out.println("...exported to " + name + "...");
   }
 
+  /**
+   * Converts double[] array to String[] array.
+  **/
   private String[] toStringArr(double[] d) {
     String[] str = new String[d.length];
     for (int i = 0; i < d.length; i++)

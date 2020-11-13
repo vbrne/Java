@@ -4,7 +4,7 @@
  * Computer Engineering
  * Senior Design
  * Spring/Fall 2020
- * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ * Group 15: Bernie Villalon, Samuel Solis, Leo Marroquin
  *
  * Description:
  *   This class is responsible for deriving the lambda constant, labeled as
@@ -30,8 +30,7 @@ public class Lambda {
   public double[] VDS, IDS, tri_V_DS, tri_I_DS, sat_V_DS, sat_I_DS;
 
   public Lambda(double[] vals) {
-
-  // Formatting Array
+  // Formatting Array; going to be converted to taking Data Object as input
     double[] V_D = new double[45];
     double[] V_S = new double[45];
     double[] I = new double[45];

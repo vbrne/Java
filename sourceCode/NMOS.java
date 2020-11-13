@@ -4,7 +4,7 @@
  * Computer Engineering
  * Senior Design
  * Spring/Fall 2020
- * Group 15: Bernie VIllalon, Samuel Solis, Leo Marroquin
+ * Group 15: Bernie Villalon, Samuel Solis, Leo Marroquin
  *
  * Description:
  *   This Class is responsible for directing all the information being used,
