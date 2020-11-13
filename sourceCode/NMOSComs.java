@@ -25,20 +25,46 @@ import java.util.Scanner;
 public class NMOSComs {
   public final boolean debug = true;
 
+  /**
+   * Digital-to-Analog Converter Hardware Specifications:
+  **/
   public final int DACResolution = (int)Math.pow(2, 12);  // 12-bits
-  public final int ADCResolution = (int)Math.pow(2, 14);  // 14-bits
   public final double DACMaxVoltage = 2.048;
+
+  /**
+   * Analog-to-Digital Converter Hardware Specifications:
+  **/
+  public final int ADCResolution = (int)Math.pow(2, 14);  // 14-bits
   public final double ADCMaxVoltage = 12.126;
+
   public final double dropResistor = 100;
 
   Data ThresholdSweep;
   Data LambdaSweep;
 
+  /**
+   * File flg is responsible fo setting flag to denote which app is working.
+   * "false" denotes Java app is working, where "true" denotes c++ is working
+  **/
   File flg = new File("h7f5k68k.dat");
+
+  /**
+   * Files vds, vgs, and drp are responsible for getting VDS, VGS, and Drop 
+   * readings from Microcontroller to java app respectively.
+  **/
   File vds = new File("bk851d39.dat");
   File vgs = new File("y6u4w0r7.dat");
-  File vth = new File("eltonj.dat");
   File drp = new File("drp.dat");
+
+  /**
+   * File vth is responsible for getting VTH calculation from Java application
+   * to Microcontroller. 
+  **/
+  File vth = new File("eltonj.dat");
+
+  /**
+   * File mod is responsible for denoting the "mode", whatever that means o.O
+  **/
   File mod = new File("irmdm18.dat");
 
   public NMOSComs() {
