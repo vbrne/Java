@@ -27,6 +27,10 @@ import org.knowm.xchart.XYChartBuilder;
 public class Display {
   private List<XYChart> charts = new ArrayList<XYChart>();  //List of charts for future matrix display
   XYChart Threshold_Chart, Lambda_Chart;
+
+  /**
+   * Universal Widths/Heights
+  **/
   private int width = 1000;
   private int height = 500;
 
