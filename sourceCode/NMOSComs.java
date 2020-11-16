@@ -68,19 +68,25 @@ public class NMOSComs {
   /**
    * File mod is responsible for denoting the "mode", whatever that means o.O
   **/
-  File mod = new File("irmdm18.dat");
+  File mod = new File("pnkftwd1t6.dat");
+
+  /**
+   * File por is responisble for setting which COM port the user chooses.
+  **/
+  File por = new File("irnmdn18.dat");
 
   /**
    * Initiator for NMOSComs; runs communications using file read/write to communicate
    * with back-end C++ program.
   **/
-  public NMOSComs() {
+  public NMOSComs(String Port) {
     setFile(flg);     // 'Sets' all files :: either creates or resets files.
     setFile(vds);     // ""
     setFile(vgs);     // ""
     setFile(vth);     // ""
     setFile(drp);     // ""
     setFile(mod);     // ""
+    writeToFile(por, Port);
   }
 
   /**
@@ -95,7 +101,7 @@ public class NMOSComs {
 
       waitForFiles();                   // Waits for C++ signal that it's finished
 
-      ThresholdSweep = readFiles();     // Reads the data from vds,vgs,drp and converts to Data object
+      //ThresholdSweep = readFiles();     // Reads the data from vds,vgs,drp and converts to Data object
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
@@ -131,6 +137,22 @@ public class NMOSComs {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   /**
+   * Helper function to write a single line
+  **/
+  private void writeToFile(File f, String s) {
+    try {
+      if (f.createNewFile()) System.out.println("File created: " + f.getName());
+      FileWriter tmp = new FileWriter(f.getName());
+      tmp.write(s);
+      tmp.close();
+      System.out.println("Successfully set " + f.getName());
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Helper function to setFiles
   **/
   private void setFile(File f) {
@@ -150,25 +172,30 @@ public class NMOSComs {
    * Helper function to wait for files
   **/
   private void waitForFiles() {
-    while(true) {
+    boolean whileFlag = true;
+    while(whileFlag) {
+      String strFlag = "";
       try {
         Scanner flag = new Scanner (flg);
-        String strFlag = flag.nextLine(); // Reads flg file
+        strFlag = (String) flag.nextLine(); // Reads flg file
         flag.close();
         
-        if (strFlag == "false") break;    // Checks if files were updated
-
       } catch (IOException e) {
         System.err.println(e);
       }
 
+      if (debug) print(strFlag);
+      if (strFlag.equals("false")) whileFlag = false;    // Checks if files were updated
+
       // Delay
       try {
         Thread.sleep(250);                // Delays by 250 milliseconds
+        if (debug) System.out.println("Waiting...");
       } catch (InterruptedException ie) {
         Thread.currentThread().interrupt();
       }
     }
+    if (debug) System.out.println("Done Waiting!");
   }
 
   /**
@@ -231,7 +258,7 @@ public class NMOSComs {
    *  DigitalVoltage = AnalogVoltage * -----------------  |  by 6, hence we need to scale-down our
    *                                   DACMaxVoltage * 6  |  calculation to get the desired output.
   **/
-  private int toDigital(double ana) {
+  public int toDigital(double ana) {
     return (int)Math.ceil(ana * DACResolution / DACMaxVoltage / 6);
   }
 
@@ -242,14 +269,21 @@ public class NMOSComs {
    *  AnalogVoltage = DigitalVoltage * -------------
    *                                   ADCResolution
   **/
-  // Possibly not functional ;-; (yet)
-  private double toAnalog(int dig) {
-    return (dig / ADCResolution * ADCMaxVoltage);
+  public double toAnalog(int dig) {
+    return (dig * ADCMaxVoltage / ADCResolution); 
+    // Important that Mult is first because Div first results in 0.0 ;-;
   }
+
+  /**
+   * I just didn't like typing "System.out.println()" all the time...
+  **/
+  private void print(String s) { System.out.println(s);}
 
   /**
    * Main function for testing this specific class
   **/
   public static void main(String[] args) {
+    NMOSComs t = new NMOSComs("COM10");
+    t.startThresholdSweep();
   }
 }

@@ -64,6 +64,7 @@ public class gui {
 	JScrollPane leftScrollPane;
 
   NMOS n;
+  String COMPort = "";
   boolean nFlag = false;
 	JLabel thresholdLabel;
 	JLabel knLabel;
@@ -93,7 +94,8 @@ public class gui {
 	private void createFrame() {
 		frame = new JFrame("Semiconductor Parameter Analyzer");	// Initializes window with title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		// Exits application when closing window
-		frame.setSize(176, 720);																// Arbitrary window size
+		frame.setSize(500, 720);
+		//frame.setSize(176, 720);																// Arbitrary window size
 		frame.setLayout(new BorderLayout( ));
 	}
 
@@ -152,6 +154,23 @@ public class gui {
 		leftPanel.setLayout(boxlayout);
 		leftPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin)));
 
+		JLabel selCom = new JLabel("<html>" +
+																"<span style='font-size:14px'>" +
+																	"Choose a Com Port:" +
+																"</span>" +
+															"</html>");
+		leftPanel.add(selCom);
+
+		String[] comList = {"-", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7"};
+		JComboBox<String> selComsList = new JComboBox<String>(comList);
+		//selComsList.setPreferredSize(new Dimension(200, 25));
+		//selComsList.setMaximumSize(selComsList.getPreferredSize());
+		//leftPanel.add(selComsList);
+		JPanel tmp = new JPanel();
+		tmp.add(selComsList);
+		leftPanel.add(tmp);	
+		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
+
 		// "Choose a device:" text															// Initializes "Choose" Label
   	JLabel label = new JLabel("<html>" +
 																"<span style='font-size:14px'>" +
@@ -160,14 +179,14 @@ public class gui {
 															"</html>");
 		//label.setHorizontalAlignment(JLabel.CENTER);
   	leftPanel.add(label);																		// Adds Label to Panel
-
 		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
-		leftPanel.add(new JSeparator()); 
+		//leftPanel.add(new JSeparator()); 
 		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 
 		JButton nButton = new JButton("NMOS");
 		nButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				COMPort = (String) selComsList.getSelectedItem();
 				runNMOS();
 			}
 		});
@@ -219,7 +238,8 @@ public class gui {
 	// Adding everything to the frame
 	// Also used to reload if changes
 	private void updateFrame() {
-		frame.getContentPane().add(BorderLayout.WEST, leftScrollPane); // Adds Panel to the Center of the Window
+		//frame.getContentPane().add(BorderLayout.WEST, leftPanel);
+		frame.getContentPane().add(BorderLayout.WEST, leftScrollPane); // Adds Panel to the Left of the Window
 		frame.revalidate();
 		frame.setVisible(true);
 	}
@@ -232,9 +252,10 @@ public class gui {
       return;
     }
 
+    System.out.println(COMPort);
     nFlag = true;
 
-		n = new NMOS();																		      // Initializes NMOS Class
+		n = new NMOS(COMPort);																		      // Initializes NMOS Class
 
 		leftPanel.add(new JSeparator()); // Seperator; Prolly going to remove
 		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
@@ -271,11 +292,11 @@ public class gui {
 
 		JScrollPane tmp = new JScrollPane(thresholdTable);
 		//tmp.setPreferedSize(new Dimension(170,720));
-		leftPanel.add(tmp);
+		/*leftPanel.add(tmp);																									*/
 
 		tmp = new JScrollPane(lambdaTable);
 		//tmp.setPreferedSize(new Dimension(170,720));
-		leftPanel.add(tmp);
+		/*leftPanel.add(tmp);																									*/
 
 		chartsPanel = new JPanel();                             // Initializes chartsPanel
 		BoxLayout boxlayout = new BoxLayout(chartsPanel, BoxLayout.Y_AXIS); // Initializes BoxLayout for chartsPanel
@@ -290,14 +311,14 @@ public class gui {
    		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		chartsScrollPane.getVerticalScrollBar().setUnitIncrement(8); // Sets scroll speed to 8px/increment
 
-		frame.setSize(1280,720);																// Arbitrary window size
+		frame.setSize(1290,720);																// Arbitrary window size
 		frame.getContentPane().add(BorderLayout.CENTER, chartsScrollPane);
 		updateFrame();																					// Updates Window to show new Labels
 	}
   
   // If runNMOS() has already run once, this simply runs again and updates instead of creating
   private void runNMOS(boolean fl) {
-    n = new NMOS();
+    n = new NMOS(COMPort);
 
     thresholdLabel.setText("Threshold: " + df.format(n.dats[0]));
     knLabel.setText("kn: " + df.format(n.dats[1]));	        // Creates kn Label with Data

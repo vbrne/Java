@@ -32,7 +32,7 @@ public class NMOS {
   // Displays 'F'... that's it...
   public NMOS(boolean fl) { Display tmp = new Display(); tmp.addF(); tmp.showAllCharts(); }
 
-  public NMOS() {
+  public NMOS(String port) {
    /****************************************************************************
     Communication with Device to get Data; returns "values" array, kinda like:
 
@@ -114,13 +114,13 @@ public class NMOS {
   //public XYChart returnAt(int i) { return charts.get(i); }  //  is supposed to help if possible
 
   public static void main(String args[]) throws IOException {
-    NMOS test = new NMOS();
-    String[][] arr = test.thresholdTable;
-    for (int i = 0; i < arr.length; i++) 
-      System.out.println(arr[i][0] + " : " + arr[i][1]);
-    arr = test.lambdaTable;
-    for (int i = 0; i < arr.length; i++) 
-      System.out.println(arr[i][0] + " : " + arr[i][1]);
+    //NMOS test = new NMOS();
+    //String[][] arr = test.thresholdTable;
+    //for (int i = 0; i < arr.length; i++) 
+    //  System.out.println(arr[i][0] + " : " + arr[i][1]);
+    //arr = test.lambdaTable;
+    //for (int i = 0; i < arr.length; i++) 
+    //  System.out.println(arr[i][0] + " : " + arr[i][1]);
     
   }
 }
