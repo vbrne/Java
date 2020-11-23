@@ -253,11 +253,12 @@ public class gui {
     }
 
     System.out.println(COMPort);
-    nFlag = true;
+    nFlag = true;									// Sets nFlag, for initial condition
 
-		n = new NMOS(COMPort);																		      // Initializes NMOS Class
+		flash.setText("Connecting to " + COMPort + ".");
+		n = new NMOS(COMPort);																  // Initializes NMOS Class
 
-		leftPanel.add(new JSeparator()); // Seperator; Prolly going to remove
+		leftPanel.add(new JSeparator()); 												// Seperator; Prolly going to remove
 		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 
 		// Returning Data:
@@ -318,6 +319,7 @@ public class gui {
   
   // If runNMOS() has already run once, this simply runs again and updates instead of creating
   private void runNMOS(boolean fl) {
+  	flash.setText("Connecting to " + COMPort + ".");
     n = new NMOS(COMPort);
 
     thresholdLabel.setText("Threshold: " + df.format(n.dats[0]));

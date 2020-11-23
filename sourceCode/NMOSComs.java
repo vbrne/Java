@@ -22,6 +22,8 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import java.lang.Math;                  //For Testing
+
 public class NMOSComs {
   public final boolean debug = true;
 
@@ -101,7 +103,8 @@ public class NMOSComs {
 
       waitForFiles();                   // Waits for C++ signal that it's finished
 
-      //ThresholdSweep = readFiles();     // Reads the data from vds,vgs,drp and converts to Data object
+      ThresholdSweep = readFiles();     // Reads the data from vds,vgs,drp and converts to Data object
+      if (debug) printData(ThresholdSweep);
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
@@ -135,6 +138,7 @@ public class NMOSComs {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// These should all be private but may currently be public for testing
 
   /**
    * Helper function to write a single line
@@ -202,7 +206,7 @@ public class NMOSComs {
    * Helper function to read all vds,vgs,drp files and stransfer to Data object
    * Returns said Data object
   **/
-  private Data readFiles() {
+  public Data readFiles() {
     double[] VDS = getArray(vds); 
     double[] VGS = getArray(vgs);
     double[] DRP = getArray(drp);
@@ -215,7 +219,7 @@ public class NMOSComs {
    * Helper function to read array file individually
    * Returns double[] array version of the file
   **/
-  private double[] getArray(File f) {
+  public double[] getArray(File f) {
     ArrayList<Double> L = new ArrayList<>();
     String fileName = f.getName();
 
@@ -243,9 +247,9 @@ public class NMOSComs {
 
   /**
    * Helper function that converts ArrayList<Double> to double[] Array
-   * the function '.toArray()' wasn't working so this function was made...
+   * the function '.toArraSystem.out.println("Given: " + rand + " returns: " + ans);y()' wasn't working so this function was made...
   **/
-  private double[] toDoubleArray(ArrayList<Double> l) {
+  public double[] toDoubleArray(ArrayList<Double> l) {
     double[] tmp = new double[l.size()];
     for (int i = 0; i < l.size(); i++) tmp[i] = l.get(i);
     return tmp;
@@ -280,10 +284,81 @@ public class NMOSComs {
   private void print(String s) { System.out.println(s);}
 
   /**
+   * Helper to print array for debugging
+  **/
+  private void printData(Data dat) {
+    if (!debug) return;               // To prevent un-needed printing
+
+    System.out.println("VDS Values: ");
+    printArray(dat.vds);
+    System.out.println("\nVGS Values: ");
+    printArray(dat.vgs);
+    System.out.println("\nIDS Values: ");
+    printArray(dat.ids);
+  }
+
+  /**
+   * Helper for Helper to print arrays
+  **/
+  private void printArray(double[] arr) {
+    for (int i = 0; i < arr.length; i++) System.out.println(" " + arr[i]);
+  }
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Testing for the class:
+
+  /**
    * Main function for testing this specific class
   **/
   public static void main(String[] args) {
     NMOSComs t = new NMOSComs("COM10");
-    t.startThresholdSweep();
+    //t.startThresholdSweep();
+    //t.testToDigital(10);
+    //t.testToAnalog(10);
+    //t.testToDoubleArray();
+    //t.testPrintData();
+    //t.testGetArray();
+  }
+
+  public void testGetArray() {  // Questionable; don't know what values HW should output yet
+    File t = new File("test.dat");
+    printArray(getArray(t));
+  }
+  public void testToDoubleArray() {
+    ArrayList<Double> list = new ArrayList<>();
+    for (int i = 0; i < 10; i++) list.add(sigFigs(Math.random()*12, 3));
+    double[] ans = toDoubleArray(list);
+    printArray(ans);
+  }
+  public void testToDigital(int t) {  // Seems good
+    for (int i = 0; i < t; i++) {
+      double rand = sigFigs(Math.random()*12, 3);
+      int ans = toDigital(rand);
+      System.out.println("Given: " + rand + " returns: " + ans);
+    }
+  }
+  public void testToAnalog(int t) {   // Seems good
+    for (int i = 0; i < t; i++) {
+      int rand = (int) Math.round(Math.random()*4000);
+      double ans = sigFigs(toAnalog(rand), 3);
+      System.out.println("Given: " + rand + " returns: " + ans);
+    }
+  }
+  public void testPrintData() {       // Seems good
+    double[] randVDS = getRandArray(20);
+    double[] randVGS = getRandArray(20);
+    double[] randDRP = getRandArray(20);
+    Data tmp = new Data(randVDS, randVGS, randDRP, 100);
+    printData(tmp);
+  }
+  public double[] getRandArray(int size) {
+    double[] tmp = new double[size];
+    for (int i = 0; i < size; i++) tmp[i] = sigFigs(Math.random()*12, 3);
+    return tmp;
+  }
+  public double sigFigs(double num, int fig) {
+    double tens = Math.pow(10, fig);
+    return Math.round(Math.ceil(num*tens))/tens;
   }
 }
