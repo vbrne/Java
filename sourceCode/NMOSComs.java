@@ -14,6 +14,8 @@
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -89,6 +91,7 @@ public class NMOSComs {
     setFile(drp);     // ""
     setFile(mod);     // ""
     writeToFile(por, Port);
+    launchCpp();
   }
 
   /**
@@ -169,6 +172,28 @@ public class NMOSComs {
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
+    }
+  }
+
+  /**
+   * Helper function to launch Cpp executable
+   * Uses: https://www.infoworld.com/article/2071275/when-runtime-exec---won-t.html?page=2
+   * as a guide.
+  **/
+  private void launchCpp() {
+    try {
+      //String cwd = System.getProperty("user.dir");  // In case we need User Directory for some reason
+      //System.out.println(cwd);
+      Runtime rt = Runtime.getRuntime();
+      Process proc = rt.exec("./test");
+      //BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+      //String line = "";
+      //while ((line = reader.readLine()) != null) System.out.println(line);
+
+      int exitVal = proc.waitFor();
+      System.out.println("Process exitValue: " + exitVal);
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
   }
 

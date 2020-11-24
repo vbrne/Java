@@ -30,27 +30,17 @@ public class Threshold {
   public double THRESHOLD, KN, INTERCEPT, SLOPE;
   public double[] VGS, IDS, sqrtIDS, I_eq, V_GS_eq;
 
-  public Threshold(double[] vals) {
+  public Threshold(Data sweep) {
   // Formatting; Going to be converted to taking in Data Object as input
-    double[] V_G = new double[21], V_S = new double[21], I = new double[21];  // Divides values do each pin
-    for (int i = 0; i < vals.length; i++) {
-      if (i < 21)
-        V_G[i] = vals[i];     // The first 21 values are the Voltages at the Gate pin
-      else if (i < 42)
-        V_S[i-21] = vals[i];  // The second 21 values are the Voltages at the Source pin
-      else
-        I[i-42] = vals[i];    // The final 21 values is the Current flowing through the load resistor
-    }
+    VGS = sweep.vgs;
+    IDS = sweep.ids;
 
-    sqrtIDS = sqrtArr(I);
-
-    double[] V_GS = subtract(V_G, V_S);       // Makes difference in V_GS array
-
+    sqrtIDS = sqrtArr(IDS);
   // Find Saturation  Region
-    int start = currStart(I);                 // Finds starting indices of the Saturation Region
+    int start = currStart(IDS);                 // Finds starting indices of the Saturation Region
 
     I_eq = newArr(start, sqrtIDS);            // Current at the Saturation Region
-    V_GS_eq = newArr(start, V_GS);            // Gate voltages at the Saturation Region
+    V_GS_eq = newArr(start, VGS);            // Gate voltages at the Saturation Region
 
   // Linear Regression
     LinearFit fit = new LinearFit(V_GS_eq, I_eq); // Applies LinearReagression to Plot values
@@ -60,8 +50,6 @@ public class Threshold {
     SLOPE = fit.slope;          //System.out.println("TH Slope:     " + SLOPE);
     THRESHOLD = (INTERCEPT * -1) / SLOPE; // Solves for Vth
     KN = 2 * SLOPE * SLOPE;               // Solves for kn
-    VGS = V_GS;
-    IDS = I;
   }
 
   // Simply prints array; used for testing purposes
@@ -121,7 +109,7 @@ public class Threshold {
     *   arrays below listed as double [] vals are said data.                    *
     *                                                                           *
     ****************************************************************************/
-public static void main(String[] args) {
+  public static void main(String[] args) {
     // Jr Lab IRF Example Data:
     //double[] vals = {0.000,0.500,1.000,1.500,2.000,2.500,3.000,3.500,4.000,4.500,5.000,5.500,6.000,6.500,7.000,7.500,8.000,8.500,9.000,9.500,9.992,0.000,0.000,0.000,0.000,0.000,0.000,0.035,0.279,0.658,1.072,1.513,1.960,2.419,2.883,3.350,3.814,4.279,4.747,5.217,5.691,6.156, 0.000,0.000,0.000,0.000,0.000,0.000,0.353,2.813,6.634,10.809,15.255,19.762,24.390,29.068,33.777,38.455,43.144,47.862,52.601,57.381,62.069};
     // Jr Lab 2N7000 Example Data:
@@ -131,8 +119,31 @@ public static void main(String[] args) {
     // Jr Lab 2N7000 Example Data 2:
     //double[] vals = {0.001,0.505,1.002,1.506,2.010,2.504,3.000,3.502,4.000,4.500,5.000,5.511,6.004,6.501,7.030,7.509,8.020,8.503,9.000,9.507,9.950,0.000,0.000,0.000,0.000,0.000,0.170,0.541,0.964,1.412,1.862,2.314,2.793,3.253,3.710,4.214,4.661,5.150,5.606,6.070,6.550,6.980,0.000408998,0.000306748,0.000306748,0.000408998,0.000408998,1.738241309,5.531697342,9.856850716,14.43762781,19.03885481,23.6605317,28.55828221,33.26175869,37.93456033,43.08793456,47.65848671,52.65848671,57.32106339,62.06543967,66.97341513,71.37014315};
 
-    Threshold test = new Threshold(vals);
+    Threshold test = new Threshold(convertToData(vals));
     System.out.println("Threshold: " + test.THRESHOLD);
     System.out.println("K_n: " + test.KN);
+  }
+
+  /**
+   * Used to varify it works by converting old data arrays to Data object
+  **/
+  public static Data convertToData(double[] vals) {
+    double[] V_G = new double[21], V_S = new double[21], I = new double[21];  // Divides values do each pin
+    for (int i = 0; i < vals.length; i++) {
+      if (i < 21)
+        V_G[i] = vals[i];     // The first 21 values are the Voltages at the Gate pin
+      else if (i < 42)
+        V_S[i-21] = vals[i];  // The second 21 values are the Voltages at the Source pin
+      else
+        I[i-42] = vals[i];    // The final 21 values is the Current flowing through the load resistor
+    }
+    double[] V_GS = subtract(V_G, V_S);       // Makes difference in V_GS array
+    Data tmp = new Data(new double[21], V_GS, multArray(I, 100), 100);
+    return tmp;
+  }
+  public static double[] multArray(double[] arr, int s) {
+    double[] tmp = new double[arr.length];
+    for (int i = 0; i < arr.length; i++) tmp[i] = arr[i]*s;
+    return tmp;
   }
 }
