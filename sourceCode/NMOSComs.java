@@ -33,17 +33,27 @@ public class NMOSComs {
    * Digital-to-Analog Converter (DAC) Hardware Specifications:
   **/
   public final int DACResolution = (int)Math.pow(2, 12);  // 12-bits
-  public final double DACMaxVoltage = 2.048;
+  public final double DACMaxVoltage = 2.048; // Volts
   /**
    * Analog-to-Digital Converter (ADC) Hardware Specifications:
+   * Update: We are no longer using an ADC ;-;
   **/
-  public final int ADCResolution = (int)Math.pow(2, 14);  // 14-bits
-  public final double ADCMaxVoltage = 12.126;
+  public final int ADCResolution = (int)Math.pow(2, 10);  // 10-bits
+  public final double ADCMaxVoltage = 5.120; // Volts
   /**
-   * DAC and ADC have different Resolutions and Reference voltages, hence
-   * the different specifications.
+   * Voltage divider resistors used to scale-down input voltages, labeled
+   * R1 and R2. There are two seperate deviders, the vgsR1 = 1.993kOhms
+   * and vgsR2 = 0.510kOhms, and vdsR1 = 2.093kOhms and vdsR2 = 0.514kOhms.
+   * For simplicity, we average the values to only use two values.
+   * 
+   * Divider Scaling: 
   **/
-
+  public final double divR1 = 2.043; // kOhms
+  public final double divR2 = 0.513; // kOhms
+  public final double divSc = (divR1 + divR2)/divR2;
+  /**
+   * Drop resistor used to calculate current
+  **/
   public final double dropResistor = 100;
 
   Data ThresholdSweep;
@@ -55,7 +65,7 @@ public class NMOSComs {
   **/
   File flg = new File("h7f5k68k.dat");
 
-  /**
+  /**toAnalog
    * Files vds, vgs, and drp are responsible for getting VDS, VGS, and Drop 
    * readings from Microcontroller to java app respectively.
   **/
@@ -299,7 +309,8 @@ public class NMOSComs {
    *                                   ADCResolution
   **/
   public double toAnalog(int dig) {
-    return (dig * ADCMaxVoltage / ADCResolution); 
+
+    return (dig * ADCMaxVoltage / ADCResolution)*divSc; 
     // Important that Mult is first because Div first results in 0.0 ;-;
   }
 
@@ -340,7 +351,8 @@ public class NMOSComs {
     NMOSComs t = new NMOSComs("COM10");
     //t.startThresholdSweep();
     //t.testToDigital(10);
-    //t.testToAnalog(10);
+    System.out.println(t.divSc);
+    t.testToAnalog(10);
     //t.testToDoubleArray();
     //t.testPrintData();
     //t.testGetArray();
@@ -363,9 +375,9 @@ public class NMOSComs {
       System.out.println("Given: " + rand + " returns: " + ans);
     }
   }
-  public void testToAnalog(int t) {   // Seems good
+  public void testToAnalog(int t) {   // Seems good? Value shouldnt go above 2.4V (480)
     for (int i = 0; i < t; i++) {
-      int rand = (int) Math.round(Math.random()*4000);
+      int rand = (int) Math.round(Math.random()*500);
       double ans = sigFigs(toAnalog(rand), 3);
       System.out.println("Given: " + rand + " returns: " + ans);
     }
