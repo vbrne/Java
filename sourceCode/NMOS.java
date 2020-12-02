@@ -39,25 +39,27 @@ public class NMOS {
     Commute Coms = new Commute();
     double[] threshList = Coms.threshList();
     ****************************************************************************/
-    double[] threshList = getThreshValues();    // Gets data to use in Threshold Class
-    Thresh = new Threshold(threshList);         // Runs Threshold Tests
-    dats[0] = Thresh.THRESHOLD;                 // Stores Theshold Calculated
-    dats[1] = Thresh.KN;                        // Stores kn Calculated
-    thresholdTable = getTable(Thresh.VGS, Thresh.sqrtIDS);
+    if (port == "-") {
+      NMOSComs Coms = new NMOSComs(getThreshValues());    // Gets data to use in Threshold Class
+      Thresh = new Threshold(Coms.ThresholdSweep);         // Runs Threshold Tests
+      dats[0] = Thresh.THRESHOLD;                 // Stores Theshold Calculated
+      dats[1] = Thresh.KN;                        // Stores kn Calculated
+      thresholdTable = getTable(Thresh.VGS, Thresh.sqrtIDS);
+    }
 
    /****************************************************************************
     Coms.returnThresh(Thresh.threshold());
 
     double[] lambList = Coms.lambdaList();
     ****************************************************************************/
-    double[] lambList = getLambdaValues();    // Gets data to use in Lambda Class
-    Lamb = new Lambda(lambList);              // Runs Lambda Tests
-    dats[2] = Lamb.LAMBDA;                    // Stores Lambda Calculated
-    lambdaTable = getTable(Lamb.VDS, Lamb.IDS);
+    //double[] lambList = getLambdaValues();    // Gets data to use in Lambda Class
+    //Lamb = new Lambda(lambList);              // Runs Lambda Tests
+    //dats[2] = Lamb.LAMBDA;                    // Stores Lambda Calculated
+    //lambdaTable = getTable(Lamb.VDS, Lamb.IDS);
 
-    Charts = new Display();                   // Initializes new Display Class
-    Charts.addThresholdChart(Thresh);         // Creates Charts from Threshold Data
-    Charts.addLambdaChart(Lamb);              // Creates Charts from Lambda Data
+    //Charts = new Display();                   // Initializes new Display Class
+    //Charts.addThresholdChart(Thresh);         // Creates Charts from Threshold Data
+    //Charts.addLambdaChart(Lamb);              // Creates Charts from Lambda Data
     //Charts.showAllCharts();                   // Displays Charts on Seperate JFrame (big sad;-;)
   }
 

@@ -56,8 +56,8 @@ public class NMOSComs {
   **/
   public final double dropResistor = 100;
 
-  Data ThresholdSweep;
-  Data LambdaSweep;
+  public Data ThresholdSweep;
+  public Data LambdaSweep;
 
   /**
    * File flg is responsible fo setting flag to denote which app is working.
@@ -105,23 +105,25 @@ public class NMOSComs {
   }
 
   /**
+   * Initiator for Simulation with previous data
+  **/
+  public NMOSComs(double[] ThreshVals) {
+    ThresholdSweep = convertToData(ThreshVals);
+  }
+
+  /**
    * Initiates Threshold Sweep (Sweep 1) and reads/returns data from back-end
   **/
   // Still in Progress...
   public void startThresholdSweep() {
-    try {
-      FileWriter tmp = new FileWriter(flg.getName());
-      tmp.write("true");                // Signals C++ program to start by setting flg "true"
-      tmp.close();                      // Closes flg
+    //Somewhere here we set the "mode"
 
-      waitForFiles();                   // Waits for C++ signal that it's finished
+    writeToFile(flg, "true");
 
-      ThresholdSweep = readFiles();     // Reads the data from vds,vgs,drp and converts to Data object
-      if (debug) printData(ThresholdSweep);
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
-    }
+    waitForFiles();                   // Waits for C++ signal that it's finished
+
+    ThresholdSweep = readFiles();     // Reads the data from vds,vgs,drp and converts to Data object
+    if (debug) printData(ThresholdSweep);
   }
 
   /**
@@ -129,24 +131,14 @@ public class NMOSComs {
    * Takes Threshold value calculated from Threshold Sweep as input.
   **/
   // Still in Progress...
-  public void startLambdaSweep(double VTH) {
-    try {
-      FileWriter tmp2 = new FileWriter(vth.getName());
-      tmp2.write(toDigital(VTH));             // First writes calculated Threshold value to vth
-      tmp2.close();                           // Closes vth
+public void startLambdaSweep(double VTH) {
+    writeToFile(vth, String.valueOf(toDigital(VTH)));
 
-      FileWriter tmp = new FileWriter(flg.getName());
-      tmp.write("true");                      // Signals C++ program to start by setting flg "true"
-      tmp.close();                            // Closes flg
+    writeToFile(flg, "true");
 
+    waitForFiles();                         // Waits for C++ signal that it's finished
 
-      waitForFiles();                         // Waits for C++ signal that it's finished
-
-      LambdaSweep = readFiles();              // Reads data from vds, vgs, drp and converts to Data object
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
-    }
+    LambdaSweep = readFiles();              // Reads data from vds, vgs, drp and converts to Data object
   }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -340,6 +332,39 @@ public class NMOSComs {
     for (int i = 0; i < arr.length; i++) System.out.println(" " + arr[i]);
   }
 
+  /**
+   * Helper to convert old data to Data object
+   * -Same function as in Threshold.java
+  **/
+  private Data convertToData(double[] vals) {
+    double[] V_G = new double[21], V_S = new double[21], I = new double[21];  // Divides values do each pin
+    for (int i = 0; i < vals.length; i++) {
+      if (i < 21)
+        V_G[i] = vals[i];     // The first 21 values are the Voltages at the Gate pin
+      else if (i < 42)
+        V_S[i-21] = vals[i];  // The second 21 values are the Voltages at the Source pin
+      else
+        I[i-42] = vals[i];    // The final 21 values is the Current flowing through the load resistor
+    }
+    double[] V_GS = subtract(V_G, V_S);       // Makes difference in V_GS array
+    Data tmp = new Data(new double[21], V_GS, multArray(I, 100), 100);
+    return tmp;
+  }
+  public double[] multArray(double[] arr, int s) {
+    double[] tmp = new double[arr.length];
+    for (int i = 0; i < arr.length; i++) tmp[i] = arr[i]*s;
+    return tmp;
+  }
+  public static double[] subtract(double[] arr1, double[] arr2) {
+    double[] ans = new double[arr1.length];
+    if (arr1.length != arr2.length)
+      throw new IllegalArgumentException("Array lengths are not equal");
+    else {
+      for (int i = 0; i < arr1.length; i++)
+        ans[i] = arr1[i] - arr2[i];
+      return ans;
+    }
+  }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Testing for the class:
@@ -349,10 +374,10 @@ public class NMOSComs {
   **/
   public static void main(String[] args) {
     NMOSComs t = new NMOSComs("COM10");
+    t.startLambdaSweep(3.2);
     //t.startThresholdSweep();
     //t.testToDigital(10);
-    System.out.println(t.divSc);
-    t.testToAnalog(10);
+    //t.testToAnalog(10);
     //t.testToDoubleArray();
     //t.testPrintData();
     //t.testGetArray();
