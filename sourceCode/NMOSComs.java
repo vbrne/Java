@@ -131,7 +131,9 @@ public class NMOSComs {
    * Takes Threshold value calculated from Threshold Sweep as input.
   **/
   // Still in Progress...
-public void startLambdaSweep(double VTH) {
+  public void startLambdaSweep(double VTH) {
+    //Somewhere here we set the "mode"
+    
     writeToFile(vth, String.valueOf(toDigital(VTH)));
 
     writeToFile(flg, "true");

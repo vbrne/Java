@@ -38,7 +38,7 @@ GUI Class::
 		Each of these items are added in reverse order
 		The Bar is added to the NORTH section of the Frame
 
-		Short Version:
+		Short:
 			The Bar is created,
 			The Export option is added to the Bar
 			The NMOS option is added to the Export option
@@ -49,6 +49,79 @@ GUI Class::
 	createLeftPanel() (HelperFunction)
 		Initializes the LeftPanel
 		Sets the Layout of the leftPanel to BoxLayout
+			BoxLayout is different from BorderLayout
+				Box Layout automatically aligns things vertically when added.
+		Creates Label to Choose the COM port.
+		Creates a ComboBox, which is simply a drop-down selection menu.
+			The ComboBox lists COMs 1-7 and a '-'
+		Creates Label to choose a device 
+			Currently only has NMOS since thats the only supported decice right now
+		Creates Button for the NMOS
+			Action Listener to listen for the button being pressed
+				When Pressed: Assigns selected COM port to the global COMPort variable
+				Executes the runNMOS() function, which analyzes the NMOS device 
+		Adds everything to the leftPanel
+		Creates a Scroll Pane labeled leftScrollPane
+			Scroll Pane is a type of Panel, ?, that dynamically adds or removes any scroll 
+				option when needed
+			leftPanel is added to said Scroll Pane 
+		leftScrollPane is eventually added to the frame, but thats done in updateFrame()
 
+		runNMOS() (Helper Function to the Helper Function)
+			Checks flag to see if program has already run the NMOS Analysis before
+				If so, runs different runNMOS() that takes a boolean variable
+					The input isnt needed, though it is used simply to have another function with the same name
+					runNMOS(boolean) does pretty much the same thing, but instead of re-creating everything, it 
+						simply updates the already existing items.
+				If it has not, then it continues with the noremal function
+			Changes the previously mentioned flag
+			Runs the NMOS Analysis 
+			After analysis, creates a Label to show the Threshold, kN, and Lambda values
+				Adds them to the LeftPanel 
+					This is the reason we didnt instantly add the LeftPanel to the frame when it was created; if 
+						done so, these labeles would not have shown up since they were created after being added
+			It enables the previously created Export Functions
 
+			*It goes on a whole spiel to display each point on the analysis in a table 
+				One of our advisors suggested we make it so if a user hovers their mouse pointer on the graph,
+					then it would show that specific point on the graph
+					We could not find anythong on the XYChart Library we are using, so we thought this might be 
+						an okay alternative, though it currently isnt 100% functional
+
+			Creates the Panel for the Charts, which will be added to the CENTER of the frame
+				Sets it as the previously mentioned BoxLayout
+					This is so the two charts are vertical and horizontal, for the users convenience
+				Gets the Charts from the NMOS Analysis and adds them to the Panel
+			Creates Scroll Pane 
+				Adds the Panel to the a Scroll Pane, to get that Scroll Functionality
+			Resizes Frame so that the Charts are visible
+			Adds Scroll Pane to CENTER of Frame 
+			Lastly, Updates Frame
+
+	createBotPanel() (Helper Function)
+		Creates BotPanel with a BorderLayou()
+		Creates a flash Label and adds it to the NORTH section of the Panel
+		Creates a Exit Button
+			Action Listener; exits code when pressed 
+			Adds Exit Button the the SOUTH section of the Panel
+		Adds the Panel to the SOUTH of Frame 
+
+	updateFrame() (Helper Function)
+		Adds leftScrollPane to WEST of Frame 
+		Sets Frame to be Visible 	
+
+	Post Analysis Screenies:
+		Example of the Post-Analysis Screen;
+		This is slightly OutDated
+			Weve been putting all efforts to the actually communications for the past few weeks
+			You can see that the COMPort option hadnt been implemented on the leftPanel yet
+		You can see the tables that were referred to 
+			User can change values in the table, which is a no-no that needs to be fixed
+			We dont know how itll handle an increase in data points as we expect to take a lot of them
+		You can see all the nice Scroll Bars
+
+		After resizing, you can see the Scroll Bars that werent needed have been removed
 		
+
+NMOS Class::
+	
