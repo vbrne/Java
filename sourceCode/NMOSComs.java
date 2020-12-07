@@ -107,8 +107,9 @@ public class NMOSComs {
   /**
    * Initiator for Simulation with previous data
   **/
-  public NMOSComs(double[] ThreshVals) {
-    ThresholdSweep = convertToData(ThreshVals);
+  public NMOSComs(double[] ThreshVals, double[] LambVals) {
+    ThresholdSweep = convertToThreshData(ThreshVals);
+    LambdaSweep = convertToLambData(LambVals);
   }
 
   /**
@@ -338,7 +339,7 @@ public class NMOSComs {
    * Helper to convert old data to Data object
    * -Same function as in Threshold.java
   **/
-  private Data convertToData(double[] vals) {
+  private Data convertToThreshData(double[] vals) {
     double[] V_G = new double[21], V_S = new double[21], I = new double[21];  // Divides values do each pin
     for (int i = 0; i < vals.length; i++) {
       if (i < 21)
@@ -366,6 +367,32 @@ public class NMOSComs {
         ans[i] = arr1[i] - arr2[i];
       return ans;
     }
+  }
+
+  private Data convertToLambData(double[] vals) {
+    double[] V_D = new double[45];
+    double[] V_S = new double[45];
+    double[] D = new double[45];
+    for (int i = 0; i < vals.length; i++ )
+      if (i < 45)
+        V_D[i] = vals[i];       // First 45 values are Voltages at the Drain
+      else if (i < 90)
+        V_S[i - 45] = vals[i];  // Second 45 values are Voltages at the Source
+      else
+        D[i - 90] = vals[i]*100;    // Final 45 values are Current through the Load Resistor
+
+    double[] V_DS = pairer(V_D, V_S); // Makes difference in V_DS array
+
+    Data tmp = new Data(V_DS, new double[45], D, 100);
+    return tmp;
+  }
+  private double[] pairer(double[] x, double[] y) {
+    if (x.length != y.length)
+      throw new IllegalArgumentException("Array lengths are not equal");
+    double[] temp = new double[x.length];
+    for (int i = 0; i < temp.length; i++ )
+      temp[i] = x[i] - y[i];
+    return temp;
   }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

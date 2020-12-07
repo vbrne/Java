@@ -124,4 +124,47 @@ GUI Class::
 		
 
 NMOS Class::
-	
+	NMOS() (Constructor)
+		Establishes Communications with C++ Program 
+		Starts Threshold Sweep
+		Gets Data Object and hands to Threshold Class 
+		Gets Threshold Voltage and Transcunductance Parameter from Threshold Class and stores it in
+			a public global data array 
+			Thesse will be used for GUI to display values
+		Creates 2D Array for GUI Table
+
+		Repeats same proccess for Lambda Sweep, except it passes Threshold Value when calling the Sweep
+
+		Creates Display Object 
+		Passes Threshold and Lambda Object to Display Object 
+			When Passing, Display will create charts and store them in said Object
+
+		Display Class::
+			No Constructor
+			void addThresholdChart() (Public Function)
+				Converts Threshold Object to Chart, using XChart Library, and stores it
+			void addLambdaChart() (Public Function)
+				Converts Lambda Object to Chart, also using Chart Library, and stores it 
+			JPanel getThresholdPanel() (Public Function)
+				Returns stored Threshold XChartPanel in JPanel form 
+			JPanel getLambPanel() (Public Function)
+				Returns stored Lambda XChartPanel in JPanel form 
+
+	getThreshPanel() (Public Function)
+		Requests ThresholdPanel (Threshold Chart)
+		Returns said Panel 
+
+	getLamdaPanel() (Public Function)
+		Requests LambdaPanel (Lambda Chart)
+		Returns said Panel 
+
+	void export(int) (Public Function)
+		Function to export data to *.csv file 
+		Uses Exort Class to accomplish this 
+
+		Export Class::
+			Standard File Output
+			Only notable thing is the weird-ish .csv format 
+			
+
+
