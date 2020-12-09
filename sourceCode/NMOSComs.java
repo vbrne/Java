@@ -39,7 +39,7 @@ public class NMOSComs {
    * Update: We are no longer using an ADC ;-;
   **/
   public final int ADCResolution = (int)Math.pow(2, 10);  // 10-bits
-  public final double ADCMaxVoltage = 5.120; // Volts
+  public final double ADCMaxVoltage = 5.180; // Volts
   /**
    * Voltage divider resistors used to scale-down input voltages, labeled
    * R1 and R2. There are two seperate deviders, the vgsR1 = 1.993kOhms
