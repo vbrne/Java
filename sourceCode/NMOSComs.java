@@ -407,10 +407,12 @@ public class NMOSComs {
   **/
   public static void main(String[] args) {
     NMOSComs t = new NMOSComs("COM10");
-    t.writeToFile(t.flg, "true");
-    t.waitForFiles();
-    double[] arr = t.getArray(t.vgs); 
-    t.printArray(arr);
+    t.startThresholdSweep();
+	Threshold test = new Threshold(t.ThresholdSweep);
+	Display dis = new Display();
+	dis.addThresholdChart(test);
+	dis.showAllCharts();
+	
     //t.startLambdaSweep(3.2);
     //t.startThresholdSweep();
     //t.testToDigital(10);

@@ -21,7 +21,7 @@ public class Data {
     vds = VDS;
     vgs = VGS;
     double[] temp = new double[DRP.length];
-    for (int i = 0; i < DRP.length; i++) temp[i] = DRP[i]/omega;  // Ohm's Law: V=I*R => I=V/R
+    for (int i = 0; i < DRP.length; i++) temp[i] = 1000*DRP[i]/omega;  // Ohm's Law: V=I*R => I=V/R
     ids = temp;
   }
 
