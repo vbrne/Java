@@ -151,7 +151,7 @@ public class NMOSComs {
   /**
    * Helper function to write a single line
   **/
-  private void writeToFile(File f, String s) {
+  public void writeToFile(File f, String s) {
     try {
       if (f.createNewFile()) System.out.println("File created: " + f.getName());
       FileWriter tmp = new FileWriter(f.getName());
@@ -205,7 +205,7 @@ public class NMOSComs {
   /**
    * Helper function to wait for files
   **/
-  private void waitForFiles() {
+  public void waitForFiles() {
     boolean whileFlag = true;
     while(whileFlag) {
       String strFlag = "";
@@ -257,16 +257,20 @@ public class NMOSComs {
       BufferedReader lineReader = new BufferedReader(new FileReader(fileName));
       String line = null;
 
+      boolean first = false;
       while ((line = lineReader.readLine()) != null) {
         if (debug) System.out.println("StringRead: " + line);
 
-        int digitalValue = Integer.parseInt(line);
-        if (debug) System.out.println("DigitalRead: " + digitalValue);
+         if (first) { 
+          int digitalValue = Integer.parseInt(line);
+          if (debug) System.out.println("DigitalRead: " + digitalValue);
 
-        double analogValue = toAnalog(digitalValue);
-        if (debug) System.out.println("AnalogConv.: " + analogValue);
+          double analogValue = toAnalog(digitalValue);
+          if (debug) System.out.println("AnalogConv.: " + analogValue);
 
-        L.add(analogValue);
+          L.add(analogValue);
+        }
+        first = true;
       }
     } catch (IOException e) {
       System.err.println(e);
@@ -331,7 +335,7 @@ public class NMOSComs {
   /**
    * Helper for Helper to print arrays
   **/
-  private void printArray(double[] arr) {
+  public void printArray(double[] arr) {
     for (int i = 0; i < arr.length; i++) System.out.println(" " + arr[i]);
   }
 
@@ -403,7 +407,11 @@ public class NMOSComs {
   **/
   public static void main(String[] args) {
     NMOSComs t = new NMOSComs("COM10");
-    t.startLambdaSweep(3.2);
+    t.writeToFile(t.flg, "true");
+    t.waitForFiles();
+    double[] arr = t.getArray(t.vgs); 
+    t.printArray(arr);
+    //t.startLambdaSweep(3.2);
     //t.startThresholdSweep();
     //t.testToDigital(10);
     //t.testToAnalog(10);
