@@ -39,26 +39,26 @@ public class NMOS {
     if (port == "-") {
       NMOSComs Coms = new NMOSComs(getThreshValues(), getLambdaValues());
       Thresh = new Threshold(Coms.ThresholdSweep);
-      Lamb = new Lambda(Coms.LambdaSweep);
+      //Lamb = new Lambda(Coms.LambdaSweep);
     } else {
       NMOSComs Coms = new NMOSComs(port);           // Establishes Comms with C++
 
       Coms.startThresholdSweep();                   // Initiates Threshold Sweep
       Thresh = new Threshold(Coms.ThresholdSweep);  // Gets Threshold Sweep Data and passes to Threshold Analysis
 
-      Coms.startLambdaSweep(Thresh.THRESHOLD);      // Initiates Lambda Sweep with Threshold Voltage
-      Lamb = new Lambda(Coms.LambdaSweep);          // Gets Lambda Sweep Data and Passes to Lambda Analysis
+      //Coms.startLambdaSweep(Thresh.THRESHOLD);      // Initiates Lambda Sweep with Threshold Voltage
+      //Lamb = new Lambda(Coms.LambdaSweep);          // Gets Lambda Sweep Data and Passes to Lambda Analysis
     }
 
     dats[0] = Thresh.THRESHOLD;                     // Stores Theshold Calculated
     dats[1] = Thresh.KN;                            // Stores kn Calculated
-    dats[2] = Lamb.LAMBDA;                          // Stores Lambda Calculated
+    //dats[2] = Lamb.LAMBDA;                          // Stores Lambda Calculated
     thresholdTable = getTable(Thresh.VGS, Thresh.sqrtIDS);
-    lambdaTable = getTable(Lamb.VDS, Lamb.IDS);
+    //lambdaTable = getTable(Lamb.VDS, Lamb.IDS);
 
     Charts = new Display();                         // Initializes new Display Class
     Charts.addThresholdChart(Thresh);               // Creates Charts from Threshold Data
-    Charts.addLambdaChart(Lamb);                    // Creates Charts from Lambda Data
+    //Charts.addLambdaChart(Lamb);                    // Creates Charts from Lambda Data
   }
 
   /**

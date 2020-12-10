@@ -47,9 +47,12 @@ public class NMOSComs {
    * For simplicity, we average the values to only use two values.
    * 
    * Divider Scaling: 
+   *  R2 = 221, 221
+   *  R1 = 330, 330
+   * 
   **/
-  public final double divR1 = 2.043; // kOhms
-  public final double divR2 = 0.513; // kOhms
+  public final double divR1 = 0.330; // kOhms
+  public final double divR2 = 0.221; // kOhms
   public final double divSc = (divR1 + divR2)/divR2;
   /**
    * Drop resistor used to calculate current
@@ -90,6 +93,16 @@ public class NMOSComs {
   File por = new File("irnmdn18.dat");
 
   /**
+   * Boolean Array; for integrity when reading files.
+   * If reading seems off, remove all values of said index.
+  **/
+  Boolean[] check = new Boolean[ADCResolution];
+  int checkCount = 0;
+
+  ArrayList<Double> VDSList; 
+  ArrayList<Double> DRPList;
+  ArrayList<Double> VGSList;
+  /**
    * Initiator for NMOSComs; runs communications using file read/write to communicate
    * with back-end C++ program.
   **/
@@ -109,7 +122,7 @@ public class NMOSComs {
   **/
   public NMOSComs(double[] ThreshVals, double[] LambVals) {
     ThresholdSweep = convertToThreshData(ThreshVals);
-    LambdaSweep = convertToLambData(LambVals);
+    //LambdaSweep = convertToLambData(LambVals);
   }
 
   /**
@@ -237,21 +250,41 @@ public class NMOSComs {
    * Returns said Data object
   **/
   public Data readFiles() {
-    double[] VDS = getArray(vds); 
-    double[] VGS = getArray(vgs);
-    double[] DRP = getArray(drp);
+    VDSList = getArray(vds); 
+    DRPList = getArray(drp);
+    VGSList = getArray(vgs);
 
-    Data sweep = new Data(VDS, VGS, DRP, dropResistor);
+    checkCount();
+    filterArray();
+
+    Data sweep = new Data(toDoubleArray(VDSList), toDoubleArray(VGSList), toDoubleArray(DRPList), dropResistor);
     return sweep;
   }
+
+  /**
+   * Helper to the helper; used to check number of anomalies detected.
+  **/
+  private void filterArray() {
+    for (int i = VDSList.size(); i <= 0; i--)
+      if (check[i]) {
+        VDSList.remove(i);
+        VGSList.remove(i);
+        DRPList.remove(i);
+      }
+  }
+  public void checkCount() {
+    for (int i = 0; i < ADCResolution; i++) if (check[i]) checkCount++;
+    System.out.println(checkCount + " anomalies detected!");
+  } 
 
   /**
    * Helper function to read array file individually
    * Returns double[] array version of the file
   **/
-  public double[] getArray(File f) {
+  public ArrayList<Double> getArray(File f) {
     ArrayList<Double> L = new ArrayList<>();
     String fileName = f.getName();
+    int index = 0;
 
     try {
       BufferedReader lineReader = new BufferedReader(new FileReader(fileName));
@@ -269,6 +302,9 @@ public class NMOSComs {
           if (debug) System.out.println("AnalogConv.: " + analogValue);
 
           L.add(analogValue);
+
+          if (digitalValue >= 500) check[index] = true;
+          index++;
         }
         first = true;
       }
@@ -276,7 +312,7 @@ public class NMOSComs {
       System.err.println(e);
     }
 
-    return toDoubleArray(L);  // temporary
+    return L;  // temporary
   }
 
   /**
@@ -354,10 +390,11 @@ public class NMOSComs {
         I[i-42] = vals[i];    // The final 21 values is the Current flowing through the load resistor
     }
     double[] V_GS = subtract(V_G, V_S);       // Makes difference in V_GS array
-    Data tmp = new Data(new double[21], V_GS, multArray(I, 100), 100);
+    Data tmp = new Data(new double[21], V_GS, multArray(I, 0.1), 100);
+    printData(tmp);
     return tmp;
   }
-  public double[] multArray(double[] arr, int s) {
+  public double[] multArray(double[] arr, double s) {
     double[] tmp = new double[arr.length];
     for (int i = 0; i < arr.length; i++) tmp[i] = arr[i]*s;
     return tmp;
@@ -408,10 +445,10 @@ public class NMOSComs {
   public static void main(String[] args) {
     NMOSComs t = new NMOSComs("COM10");
     t.startThresholdSweep();
-	Threshold test = new Threshold(t.ThresholdSweep);
-	Display dis = new Display();
-	dis.addThresholdChart(test);
-	dis.showAllCharts();
+  	Threshold test = new Threshold(t.ThresholdSweep);
+  	Display dis = new Display();
+  	dis.addThresholdChart(test);
+  	dis.showAllCharts();
 	
     //t.startLambdaSweep(3.2);
     //t.startThresholdSweep();
@@ -420,46 +457,5 @@ public class NMOSComs {
     //t.testToDoubleArray();
     //t.testPrintData();
     //t.testGetArray();
-  }
-
-  public void testGetArray() {  // Questionable; don't know what values HW should output yet
-    File t = new File("test.dat");
-    printArray(getArray(t));
-  }
-  public void testToDoubleArray() {
-    ArrayList<Double> list = new ArrayList<>();
-    for (int i = 0; i < 10; i++) list.add(sigFigs(Math.random()*12, 3));
-    double[] ans = toDoubleArray(list);
-    printArray(ans);
-  }
-  public void testToDigital(int t) {  // Seems good
-    for (int i = 0; i < t; i++) {
-      double rand = sigFigs(Math.random()*12, 3);
-      int ans = toDigital(rand);
-      System.out.println("Given: " + rand + " returns: " + ans);
-    }
-  }
-  public void testToAnalog(int t) {   // Seems good? Value shouldnt go above 2.4V (480)
-    for (int i = 0; i < t; i++) {
-      int rand = (int) Math.round(Math.random()*500);
-      double ans = sigFigs(toAnalog(rand), 3);
-      System.out.println("Given: " + rand + " returns: " + ans);
-    }
-  }
-  public void testPrintData() {       // Seems good
-    double[] randVDS = getRandArray(20);
-    double[] randVGS = getRandArray(20);
-    double[] randDRP = getRandArray(20);
-    Data tmp = new Data(randVDS, randVGS, randDRP, 100);
-    printData(tmp);
-  }
-  public double[] getRandArray(int size) {
-    double[] tmp = new double[size];
-    for (int i = 0; i < size; i++) tmp[i] = sigFigs(Math.random()*12, 3);
-    return tmp;
-  }
-  public double sigFigs(double num, int fig) {
-    double tens = Math.pow(10, fig);
-    return Math.round(Math.ceil(num*tens))/tens;
   }
 }

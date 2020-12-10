@@ -27,6 +27,8 @@
 //package lib;
 
 public class Threshold {
+  public static boolean debug = true;
+
   public double THRESHOLD, KN, INTERCEPT, SLOPE;
   public double[] VGS, IDS, sqrtIDS, I_eq, V_GS_eq;
 
@@ -34,13 +36,18 @@ public class Threshold {
   // Formatting; Going to be converted to taking in Data Object as input
     VGS = sweep.vgs;
     IDS = sweep.ids;
+    System.out.print("VGS");
+    printArr(VGS);
+    System.out.print("IDS");
+    printArr(IDS);
 
     sqrtIDS = sqrtArr(IDS);
   // Find Saturation  Region
     int start = currStart(IDS);                 // Finds starting indices of the Saturation Region
+    int end = currEnd(IDS);
 
-    I_eq = newArr(start, sqrtIDS);            // Current at the Saturation Region
-    V_GS_eq = newArr(start, VGS);            // Gate voltages at the Saturation Region
+    I_eq = newArr(start, end, sqrtIDS);            // Current at the Saturation Region
+    V_GS_eq = newArr(start, end, VGS);            // Gate voltages at the Saturation Region
 
   // Linear Regression
     LinearFit fit = new LinearFit(V_GS_eq, I_eq); // Applies LinearReagression to Plot values
@@ -83,6 +90,19 @@ public class Threshold {
     return start;
   }
 
+  public static int currEnd(double[] curr) {
+    int end = curr.length;
+    if (debug) System.out.println(end);
+    for (int i = 0; i < end; i++){
+      if (debug) System.out.println(i);
+      if (curr[i] > 75) {
+        end = i;
+        if (debug) System.out.println(end);
+      }
+    }
+    return end;
+  }
+
   // Returns new Current array consisting of only the Saturation Region values.
   public static double[] sqrtArr(double[] arr) {
     double[] temp = new double[arr.length];
@@ -92,8 +112,8 @@ public class Threshold {
   }
 
   // Returns new Voltage array consisting of only the Saturation Region values.
-  public static double[] newArr(int start, double[] arr) {
-    double[] temp = new double[arr.length - start];
+  public static double[] newArr(int start, int end, double[] arr) {
+    double[] temp = new double[end - start];
     for (int i = 0; i < temp.length; i++)
       temp[i] = arr[i + start];
     return temp;

@@ -269,33 +269,37 @@ public class gui {
 		knLabel = new JLabel("kn: " + df.format(n.dats[1]));	  // Creates kn Label with Data
 		leftPanel.add(knLabel);																	// Adds kn Label to the Panel
     
+    /**
 		lambdaLabel = new JLabel("Lambda: " + n.dats[2]);			  // Creates Lambda Label with Data
 		leftPanel.add(lambdaLabel);														  // Adds Lambda Label to the Panel
+		**/
 
 		leftPanel.add(Box.createRigidArea(new Dimension(0, margin)));
 		
 		exportThresh.setEnabled(true);													// Allows Access to Exporting in Menu Bar
+		/**
 		exportLamb.setEnabled(true);														// ""
+		**/
 
-		String[] colNames = {"VGS", "sqrtIDS"};
-		String[][] thresholdTableValues = n.thresholdTable;
-		thresholdTable = new JTable(thresholdTableValues, colNames);
-		TableColumnModel colMod = thresholdTable.getColumnModel();
+		//String[] colNames = {"VGS", "sqrtIDS"};
+		//String[][] thresholdTableValues = n.thresholdTable;
+		//thresholdTable = new JTable(thresholdTableValues, colNames);
+		//TableColumnModel colMod = thresholdTable.getColumnModel();
 		//colMod.getColumn(0).setPreferredWidth(50);
 		//colMod.getColumn(1).setPreferredWidth(50);
 		//thresholdTable.setBounds(30,40,200,300);
 		//leftPanel.add(thresholdTable);
 
-		colNames[0] = "VDS"; colNames[1] = "IDS";
-		String[][] lambdaTableValues = n.lambdaTable;
-		lambdaTable = new JTable(lambdaTableValues, colNames);
+		//colNames[0] = "VDS"; colNames[1] = "IDS";
+		//String[][] lambdaTableValues = n.lambdaTable;
+		//lambdaTable = new JTable(lambdaTableValues, colNames);
 		//leftPanel.add(lambdaTable);
 
-		JScrollPane tmp = new JScrollPane(thresholdTable);
+		//JScrollPane tmp = new JScrollPane(thresholdTable);
 		//tmp.setPreferedSize(new Dimension(170,720));
 		/*leftPanel.add(tmp);																									*/
 
-		tmp = new JScrollPane(lambdaTable);
+		//tmp = new JScrollPane(lambdaTable);
 		//tmp.setPreferedSize(new Dimension(170,720));
 		/*leftPanel.add(tmp);																									*/
 
@@ -305,7 +309,7 @@ public class gui {
 		chartsPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin))); // Sets 5-Pixel spacing from Border
 
 		chartsPanel.add(n.getThreshPanel());                    // Loads Threshold Chart to Panel
-		chartsPanel.add(n.getLambPanel());                      // Loads Lambda Chart to Panel
+		//chartsPanel.add(n.getLambPanel());                      // Loads Lambda Chart to Panel
 		
 		chartsScrollPane = new JScrollPane(chartsPanel,         // Initializes ScrollPane (Scrollable-Panel)
    		ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,     // Only shows ScrollBars as needed
@@ -324,14 +328,14 @@ public class gui {
 
     thresholdLabel.setText("Threshold: " + df.format(n.dats[0]));
     knLabel.setText("kn: " + df.format(n.dats[1]));	        // Creates kn Label with Data
-    lambdaLabel.setText("Lambda: " + n.dats[2]);			      // Creates Lambda Label with Data
+    //lambdaLabel.setText("Lambda: " + n.dats[2]);			      // Creates Lambda Label with Data
     
 		chartsPanel = new JPanel();
 		BoxLayout boxlayout = new BoxLayout(chartsPanel, BoxLayout.Y_AXIS); // Initializes BoxLayout for chartsPanel
 		chartsPanel.setLayout(boxlayout);                       // Sets Layout; BoxLayout == Stacks on top of one another
 		chartsPanel.setBorder(new EmptyBorder(new Insets(margin, margin, margin, margin))); // Sets 5-Pixel spacing from Border
 		chartsPanel.add(n.getThreshPanel());
-		chartsPanel.add(n.getLambPanel());
+		//chartsPanel.add(n.getLambPanel());
 
 		frame.getContentPane().remove(chartsScrollPane);
 		chartsScrollPane = new JScrollPane(chartsPanel,         // Initializes ScrollPane (Scrollable-Panel)
