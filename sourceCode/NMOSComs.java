@@ -27,7 +27,7 @@ import java.util.Scanner;
 import java.lang.Math;                  //For Testing
 
 public class NMOSComs {
-  public final boolean debug = false;
+  public final boolean debug = true;
   public final int accMarg = 2;
 
   /**
@@ -115,7 +115,7 @@ public class NMOSComs {
     setFile(drp);     // ""
     setFile(mod);     // ""
     writeToFile(por, Port);
-    launchCpp();
+    //launchCpp();
   }
 
   /**
@@ -268,7 +268,8 @@ public class NMOSComs {
   private void filterArray() {
 	int size = VGSList.size();
 	if (debug) print(Integer.toString(size));
-    for (int i = size - 1; i <= 0; i--)
+    for (int i = size - 1; i >= 0; i--) {
+	  if (debug) System.out.println("ind: " + i + ":" + check[i]);
       if (check[i] != null) {
         //VDSList.remove(i);
 		//if (debug) print("VDSRem");
@@ -277,6 +278,7 @@ public class NMOSComs {
         DRPList.remove(i);
 		if (debug) print("DRPRem");
       }
+	}
   }
   public void checkCount() {
     for (int i = 0; i < ADCResolution; i++) if (check[i]) checkCount++;
@@ -300,19 +302,21 @@ public class NMOSComs {
       int prevValue = 0;
       int dist = 1;
       while ((line = lineReader.readLine()) != null) {
-        if (debug) System.out.println("StringRead: " + line);
+        //if (debug) System.out.println("StringRead: " + line);
 
          if (first) { 
           int digitalValue = Integer.parseInt(line);
-          if (debug) System.out.println("DigitalRead: " + digitalValue);
+          //if (debug) System.out.println("DigitalRead: " + digitalValue);
 
           double analogValue = toAnalog(digitalValue);
-          if (debug) System.out.println("AnalogConv.: " + analogValue);
+          //if (debug) System.out.println("AnalogConv.: " + analogValue);
 
           L.add(analogValue);
 
           if (digitalValue >= 500) check[index] = true;
-          if (digitalValue < prevValue - dist*accMarg || digitalValue > prevValue + dist*accMarg) {
+		  System.out.println("Index: " + index + "; Margin: " + (digitalValue - prevValue));
+          if ((digitalValue < prevValue) || (digitalValue > prevValue + dist*accMarg)) {
+			System.out.println("Error Detected!");
             check[index] = true;
             dist++;
           } else {

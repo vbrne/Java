@@ -27,7 +27,7 @@
 //package lib;
 
 public class Threshold {
-  public static boolean debug = true;
+  public static boolean debug = false;
 
   public double THRESHOLD, KN, INTERCEPT, SLOPE;
   public double[] VGS, IDS, sqrtIDS, I_eq, V_GS_eq, dispX, dispY;
@@ -133,7 +133,7 @@ public class Threshold {
   }
   
   private void makeDisXY() {
-	int excess = 40;
+	int excess = 80;
 	int size = end - start + excess;
 	dispX = new double[size];
 	dispY = new double[size];
