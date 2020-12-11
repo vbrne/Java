@@ -256,7 +256,7 @@ public class NMOSComs {
     VGSList = getArray(vgs);
 
     //checkCount();
-    filterArray();
+    //filterArray();
 
     Data sweep = new Data(toDoubleArray(VDSList), toDoubleArray(VGSList), toDoubleArray(DRPList), dropResistor);
     return sweep;
