@@ -30,24 +30,37 @@ public class Threshold {
   public static boolean debug = true;
 
   public double THRESHOLD, KN, INTERCEPT, SLOPE;
-  public double[] VGS, IDS, sqrtIDS, I_eq, V_GS_eq;
+  public double[] VGS, IDS, sqrtIDS, I_eq, V_GS_eq, dispX, dispY;
+  public int start, end;
 
   public Threshold(Data sweep) {
   // Formatting; Going to be converted to taking in Data Object as input
     VGS = sweep.vgs;
     IDS = sweep.ids;
-    System.out.print("VGS");
+    if (debug) {
+	System.out.println("VGS");
     printArr(VGS);
-    System.out.print("IDS");
+    System.out.println("IDS");
     printArr(IDS);
+	}
 
     sqrtIDS = sqrtArr(IDS);
   // Find Saturation  Region
-    int start = currStart(IDS);                 // Finds starting indices of the Saturation Region
-    int end = currEnd(IDS);
+    start = currStart(IDS);                 // Finds starting indices of the Saturation Region
+    end = currEnd(IDS);
+	if (debug) System.out.println("Start:" + start + "; End:" + end);
 
     I_eq = newArr(start, end, sqrtIDS);            // Current at the Saturation Region
     V_GS_eq = newArr(start, end, VGS);            // Gate voltages at the Saturation Region
+	
+	makeDisXY();
+	
+	if (debug) { 
+		System.out.println("IEQ");
+		printArr(I_eq);
+		System.out.println("VEQ");
+		printArr(V_GS_eq);
+	}
 
   // Linear Regression
     LinearFit fit = new LinearFit(V_GS_eq, I_eq); // Applies LinearReagression to Plot values
@@ -91,11 +104,11 @@ public class Threshold {
   }
 
   public static int currEnd(double[] curr) {
-    int end = curr.length;
+    int end = curr.length - 1;
     if (debug) System.out.println(end);
     for (int i = 0; i < end; i++){
       if (debug) System.out.println(i);
-      if (curr[i] > 75) {
+      if (curr[i] > 40) {
         end = i;
         if (debug) System.out.println(end);
       }
@@ -117,6 +130,21 @@ public class Threshold {
     for (int i = 0; i < temp.length; i++)
       temp[i] = arr[i + start];
     return temp;
+  }
+  
+  private void makeDisXY() {
+	int excess = 40;
+	int size = end - start + excess;
+	dispX = new double[size];
+	dispY = new double[size];
+	int index = 0;
+	
+	for (int i = 0; i < size; i++) {
+	  index = i + start - excess/2;
+	  //if (debug) System.out.println("ind: " + index);
+	  dispY[i] = sqrtIDS[index];
+	  dispX[i] = VGS[index];
+	}
   }
 
 //*** ~test~ Program *************************************************************

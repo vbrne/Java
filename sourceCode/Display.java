@@ -57,7 +57,7 @@ public class Display {
   **/
   public void addThresholdChart(Threshold Th) {
     XYChart tmpch = new XYChartBuilder().width(width).height(height).title("Threshold").xAxisTitle("Voltage (V)").yAxisTitle("Current (sqrt(mA))").build();
-    tmpch.addSeries("Root of Current vs Voltage", Th.VGS, Th.sqrtIDS);
+    tmpch.addSeries("Root of Current vs Voltage", Th.dispX, Th.dispY);
 
     double[] XLF = new double[] {Th.THRESHOLD, Th.V_GS_eq[Th.V_GS_eq.length - 1]};
     double[] YLF = yRange(XLF, Th.INTERCEPT, Th.SLOPE);

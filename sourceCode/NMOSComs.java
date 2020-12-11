@@ -27,7 +27,7 @@ import java.util.Scanner;
 import java.lang.Math;                  //For Testing
 
 public class NMOSComs {
-  public final boolean debug = true;
+  public final boolean debug = false;
 
   /**
    * Digital-to-Analog Converter (DAC) Hardware Specifications:
@@ -254,7 +254,7 @@ public class NMOSComs {
     DRPList = getArray(drp);
     VGSList = getArray(vgs);
 
-    checkCount();
+    //checkCount();
     filterArray();
 
     Data sweep = new Data(toDoubleArray(VDSList), toDoubleArray(VGSList), toDoubleArray(DRPList), dropResistor);
@@ -265,11 +265,16 @@ public class NMOSComs {
    * Helper to the helper; used to check number of anomalies detected.
   **/
   private void filterArray() {
-    for (int i = VDSList.size(); i <= 0; i--)
-      if (check[i]) {
-        VDSList.remove(i);
+	int size = VGSList.size();
+	if (debug) print(Integer.toString(size));
+    for (int i = size - 1; i <= 0; i--)
+      if (check[i] != null) {
+        //VDSList.remove(i);
+		//if (debug) print("VDSRem");
         VGSList.remove(i);
+		if (debug) print("VGSRem");
         DRPList.remove(i);
+		if (debug) print("DRPRem");
       }
   }
   public void checkCount() {
