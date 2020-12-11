@@ -28,6 +28,7 @@ import java.lang.Math;                  //For Testing
 
 public class NMOSComs {
   public final boolean debug = false;
+  public final int accMarg = 2;
 
   /**
    * Digital-to-Analog Converter (DAC) Hardware Specifications:
@@ -296,6 +297,8 @@ public class NMOSComs {
       String line = null;
 
       boolean first = false;
+      int prevValue = 0;
+      int dist = 1;
       while ((line = lineReader.readLine()) != null) {
         if (debug) System.out.println("StringRead: " + line);
 
@@ -309,7 +312,15 @@ public class NMOSComs {
           L.add(analogValue);
 
           if (digitalValue >= 500) check[index] = true;
+          if (digitalValue < prevValue - dist*accMarg || digitalValue > prevValue + dist*accMarg) {
+            check[index] = true;
+            dist++;
+          } else {
+            prevValue = digitalValue;
+            dist = 1;
+          }
           index++;
+          prevValue = digitalValue;
         }
         first = true;
       }
