@@ -98,7 +98,6 @@ public class NMOSComs {
    * If reading seems off, remove all values of said index.
   **/
   Boolean[] check = new Boolean[ADCResolution];
-  int checkCount = 0;
 
   ArrayList<Double> VDSList; 
   ArrayList<Double> DRPList;
@@ -132,13 +131,14 @@ public class NMOSComs {
   // Still in Progress...
   public void startThresholdSweep() {
     //Somewhere here we set the "mode"
+    writeToFile(mod, "mod1");         // Mode 1 ==  Threshold Sweep
 
     writeToFile(flg, "true");
 
     waitForFiles();                   // Waits for C++ signal that it's finished
 
     ThresholdSweep = readFiles();     // Reads the data from vds,vgs,drp and converts to Data object
-    if (debug) printData(ThresholdSweep);
+    //if (debug) printData(ThresholdSweep);
   }
 
   /**
@@ -147,7 +147,7 @@ public class NMOSComs {
   **/
   // Still in Progress...
   public void startLambdaSweep(double VTH) {
-    //Somewhere here we set the "mode"
+    writeToFile(mod, "mod2");               // Mode 2 == Lambda Sweep
     
     writeToFile(vth, String.valueOf(toDigital(VTH)));
 
@@ -280,10 +280,6 @@ public class NMOSComs {
       }
 	}
   }
-  public void checkCount() {
-    for (int i = 0; i < ADCResolution; i++) if (check[i]) checkCount++;
-    System.out.println(checkCount + " anomalies detected!");
-  } 
 
   /**
    * Helper function to read array file individually
@@ -313,18 +309,21 @@ public class NMOSComs {
 
           L.add(analogValue);
 
-          if (digitalValue >= 500) check[index] = true;
-		  System.out.println("Index: " + index + "; Margin: " + (digitalValue - prevValue));
-          if ((digitalValue < prevValue) || (digitalValue > prevValue + dist*accMarg)) {
-			System.out.println("Error Detected!");
-            check[index] = true;
-            dist++;
-          } else {
-            prevValue = digitalValue;
-            dist = 1;
+          if (fileName == "y6u4w0r7.dat") {
+            if (digitalValue >= 600) check[index] = true;
+            System.out.println("Index: " + index + "; Margin: " + (digitalValue - prevValue));
+            System.out.println("  Prev: " + prevValue + "; Curr: " + digitalValue);
+            if ((digitalValue < prevValue) || (digitalValue > prevValue + dist*accMarg)) {
+             System.out.println("Error Detected! Dist count: " + (dist + 1));
+              check[index] = true;
+              dist++;
+            } else {
+              prevValue = digitalValue;
+              dist = 1;
+            }
+            index++;
+            //prevValue = digitalValue;
           }
-          index++;
-          prevValue = digitalValue;
         }
         first = true;
       }

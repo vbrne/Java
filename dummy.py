@@ -1,8 +1,19 @@
 
-def match5(val):
-	return val*7/5
+import shutil
 
-list = [10, 100, 220, 330, 1000, 2000, 5001, 10000]
+oVDS = r'usableData/bk851d39.dat'
+oVGS = r'usableData/y6u4w0r7.dat'
+oDRP = r'usableData/drp.dat'
 
-for i in list:
-	print("{}:{}", i, match5(i))
+tVDS = r'bk851d39.dat'
+tVGS = r'y6u4w0r7.dat'
+tDRP = r'drp.dat'
+
+shutil.copyfile(oVDS, tVDS)
+shutil.copyfile(oVGS, tVGS)
+shutil.copyfile(oDRP, tDRP)
+
+f = open("h7f5k68k.dat", "w")
+f.write("false")
+f.close()
+
